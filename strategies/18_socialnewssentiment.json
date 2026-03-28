@@ -1,0 +1,36 @@
+{
+  "id": 18,
+  "name": "Real-Time Social + News Sentiment Alpha",
+  "class": "SocialNewsSentiment",
+  "type": "sentiment",
+  "subtype": "nlp_event_driven",
+  "description": "NLP models (BERT-based FinBERT, GPT-4o) continuously score Reddit WallStreetBets, Twitter/X financial accounts, SeekingAlpha, Bloomberg, and Reuters articles for each covered stock. Aggregated and decay-weighted sentiment scores drive long/short signals with 1-3 day holding periods.",
+  "core_logic": "raw_scores = [NLP(article_i) for article_i in news_feed]. sentiment_t = exp_decay_avg(raw_scores, halflife=3d). BUY when sentiment_t > threshold, SELL when < -threshold.",
+  "parameters": {
+    "nlp_model": "FinBERT / GPT-4o",
+    "data_sources": ["Twitter/X", "Reddit_WSB", "SeekingAlpha", "Bloomberg", "Reuters"],
+    "decay_halflife_days": 3,
+    "sentiment_threshold": 0.30,
+    "min_article_count": 5,
+    "hold_days": 3,
+    "universe": "S&P500 + Russell 1000"
+  },
+  "assets": ["us_large_mid_cap_equities"],
+  "timeframe": "daily_signal_intraday_execution",
+  "holding_period_days": "1-5",
+  "sharpe_ratio": { "min": 0.8, "max": 1.5, "note": "early signal advantage before crowding" },
+  "risk": {
+    "drawdown_max": "-20%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.3,
+    "main_risk": "Sentiment manipulation; bots and fake news"
+  },
+  "pros": ["Captures non-price information fast", "Decorrelated from price-based signals", "High alpha during news cycles"],
+  "cons": ["Social media manipulation risk (pump & dump)", "NLP model drift", "Signal crowded by 2025 as FinBERT widely adopted"],
+  "notable_firms": ["Two Sigma (StockTwits data)", "Accern", "RavenPack", "Bloomberg Intelligence"],
+  "key_papers": ["Sentiment Analysis for Finance (SSRN 2023)", "Twitter Mood Predicts the Stock Market (Bollen 2011)", "FinBERT (Araci 2019)"],
+  "implementation_complexity": "high",
+  "requires_shorting": true,
+  "signal_buy": "Decay-weighted sentiment score > 0.30 with volume confirmation",
+  "signal_sell": "Decay-weighted sentiment score < -0.30 with volume confirmation"
+}

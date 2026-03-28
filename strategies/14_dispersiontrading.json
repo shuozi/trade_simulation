@@ -1,0 +1,35 @@
+{
+  "id": 14,
+  "name": "Dispersion Trading",
+  "class": "DispersionTrading",
+  "type": "volatility",
+  "subtype": "relative_value_volatility",
+  "description": "Exploits the persistent overpricing of index implied volatility relative to the (weighted) average of its constituents' implied volatilities. The correlation risk premium makes index options more expensive than a basket of stock options. Sell index vol, buy individual stock vols.",
+  "core_logic": "dispersion_trade = short index straddle + long basket of stock straddles. P&L = realized_dispersion - implied_dispersion. Profit when stocks move independently (correlation < implied_correlation).",
+  "parameters": {
+    "index": "SPX",
+    "n_stocks": 30,
+    "vega_neutral": true,
+    "correlation_entry_threshold": 0.05,
+    "rebalance_frequency": "monthly",
+    "option_tenor_days": 30
+  },
+  "assets": ["sp500_options", "sp500_component_options"],
+  "timeframe": "monthly",
+  "holding_period_days": "20-30",
+  "sharpe_ratio": { "min": 0.8, "max": 1.5 },
+  "risk": {
+    "drawdown_max": "-30%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.4,
+    "main_risk": "Correlation spike during market crashes (positions lose both legs)"
+  },
+  "pros": ["Captures correlation risk premium", "Decorrelated from directional equity risk", "Sophisticated desk strategy"],
+  "cons": ["Loses badly when correlations spike (2008, 2020)", "Complex to execute (30+ options legs)", "High transaction costs"],
+  "notable_firms": ["Societe Generale", "BNP Paribas vol desks", "Citadel vol desk", "Vega AM"],
+  "key_papers": ["Dispersion Trading in Practice (SSRN 2020)", "Correlation Swaps and Dispersion Trading"],
+  "implementation_complexity": "very_high",
+  "requires_shorting": true,
+  "signal_buy": "Implied correlation unusually high → dispersion underpriced → buy dispersion",
+  "signal_sell": "Implied correlation unusually low → dispersion overpriced → sell dispersion"
+}

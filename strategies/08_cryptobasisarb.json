@@ -1,0 +1,34 @@
+{
+  "id": 8,
+  "name": "Crypto Basis / Funding Rate Arbitrage",
+  "class": "CryptoBasisArb",
+  "type": "stat_arb",
+  "subtype": "crypto_market_neutral",
+  "description": "In crypto perpetual futures markets, a funding rate mechanism keeps futures prices anchored to spot. In bull markets, longs pay shorts periodically (typically every 8 hours). The strategy goes long spot and short perpetual futures simultaneously, earning the funding rate while remaining delta-neutral.",
+  "core_logic": "Long spot BTC + Short BTC perp. Net P&L = funding_rate_collected - carry_cost. delta = 0. Annualized yield = funding_rate * 3 * 365.",
+  "parameters": {
+    "min_funding_rate_per_period": 0.0003,
+    "annualized_threshold": 0.10,
+    "funding_interval_hours": 8,
+    "exchanges": ["Binance", "OKX", "Bybit"],
+    "hedge_ratio": 1.0
+  },
+  "assets": ["BTC", "ETH", "SOL", "BNB"],
+  "timeframe": "continuous_positions",
+  "holding_period_days": "1-90",
+  "sharpe_ratio": { "min": 1.5, "max": 3.0, "note": "bull market; drops below 1.0 in bear" },
+  "risk": {
+    "drawdown_max": "-10%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.1,
+    "main_risk": "Exchange counterparty/credit risk (FTX precedent)"
+  },
+  "pros": ["Delta-neutral to BTC price", "High consistent yield in bull markets", "31%+ cumulative returns documented 2025"],
+  "cons": ["Counterparty/custody risk dominant", "Funding turns negative in bear markets", "Scale limited by open interest"],
+  "notable_firms": ["Bybit Institutional", "Galaxy Digital", "Specialized crypto quant funds"],
+  "key_papers": ["ScienceDirect: funding rate arbitrage in crypto (2025)", "Bybit institutional reports 2025"],
+  "implementation_complexity": "medium",
+  "requires_shorting": true,
+  "signal_buy": "Funding rate > 0.03% per period (positive: longs pay shorts → collect funding)",
+  "signal_sell": "Funding rate < -0.03% per period (negative: shorts pay longs)"
+}

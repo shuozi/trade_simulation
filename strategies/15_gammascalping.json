@@ -1,0 +1,35 @@
+{
+  "id": 15,
+  "name": "Gamma Scalping (Long Gamma / Delta-Neutral)",
+  "class": "GammaScalping",
+  "type": "volatility",
+  "subtype": "options_active_hedging",
+  "description": "Buy at-the-money options (long gamma) and continuously delta-hedge the position to remain directionally neutral. Each hedge rebalance locks in a small profit when the stock moves. The strategy profits when realized volatility exceeds the implied vol paid for the options.",
+  "core_logic": "Buy ATM straddle. Delta_t = dP/dS ≈ 0 (neutral). When stock moves ΔS, re-hedge. P&L per hedge = 0.5 * Gamma * ΔS^2 - Theta * dt. Net P&L > 0 when RV > IV.",
+  "parameters": {
+    "hedge_frequency": "daily",
+    "option_type": "ATM_straddle",
+    "gamma_target_per_10k_notional": 5.0,
+    "theta_budget_daily_bps": 3.0,
+    "rv_lookback": 10,
+    "min_vol_ratio_to_enter": 1.2
+  },
+  "assets": ["equity_options", "futures_options", "crypto_options"],
+  "timeframe": "daily_management",
+  "holding_period_days": "5-30",
+  "sharpe_ratio": { "min": 0.5, "max": 1.5, "note": "depends heavily on IV paid vs RV realized" },
+  "risk": {
+    "drawdown_max": "-20%",
+    "crisis_alpha": true,
+    "equity_correlation": -0.2,
+    "main_risk": "Theta decay when market is quiet; overpaying for IV"
+  },
+  "pros": ["Profits from high realized vol", "Positive crisis alpha when vol spikes", "Can profit regardless of direction"],
+  "cons": ["Theta decay burns premium in quiet markets", "Must overpay IV to enter position", "Operationally intensive (daily hedging)"],
+  "notable_firms": ["CBOE-affiliated desks", "Volatility-focused hedge funds", "Options market makers"],
+  "key_papers": ["Dynamic Replication and Options (Hull & White)", "The Gamma Trap (2025 practitioner notes)"],
+  "implementation_complexity": "high",
+  "requires_shorting": false,
+  "signal_buy": "Short-term RV > 21-day RV by >20% (volatility burst → long gamma profitable)",
+  "signal_sell": "Short-term RV < 21-day RV by >30% (quiet market → theta decay dominates)"
+}

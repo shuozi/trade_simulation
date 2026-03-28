@@ -1,0 +1,35 @@
+{
+  "id": 2,
+  "name": "Cross-Sectional Equity Momentum (12-1 Factor)",
+  "class": "CrossSectionalMomentum",
+  "type": "momentum",
+  "subtype": "factor",
+  "description": "Rank a universe of stocks (e.g. Russell 1000) by their trailing 12-month return, skipping the most recent month to avoid short-term reversal. Long the top 20% (past winners), short the bottom 20% (past losers). Rebalance monthly.",
+  "core_logic": "Score(i) = Return(t-252, t-21). Long decile 1, short decile 10. Portfolio is sector-neutralized and beta-neutralized.",
+  "parameters": {
+    "formation_months": 11,
+    "skip_months": 1,
+    "top_pct": 0.2,
+    "bottom_pct": 0.2,
+    "rebalance_frequency": "monthly",
+    "neutralization": ["sector", "beta"]
+  },
+  "assets": ["us_large_cap_equities", "developed_intl_equities", "emerging_market_equities"],
+  "timeframe": "monthly_rebalance",
+  "holding_period_days": "20-30",
+  "sharpe_ratio": { "min": 0.8, "max": 1.3, "note": "long-short implementation per AQR" },
+  "risk": {
+    "drawdown_max": "-40% during momentum crashes (2009, 2020)",
+    "crisis_alpha": false,
+    "equity_correlation": 0.3,
+    "main_risk": "Momentum crashes after sharp market reversals"
+  },
+  "pros": ["Most robust documented factor across asset classes", "Academic and practitioner validation since 1993", "Combines well with value/quality"],
+  "cons": ["Momentum crashes are sudden and severe", "Crowded", "Tax-inefficient", "Requires short-selling"],
+  "notable_firms": ["AQR Capital (AMOMX)", "Two Sigma", "BlackRock iShares"],
+  "key_papers": ["Jegadeesh & Titman (1993)", "Fama & French (2012)", "Asness, Moskowitz & Pedersen (2013)"],
+  "implementation_complexity": "medium",
+  "requires_shorting": true,
+  "signal_buy": "Top 20% by 12-1 momentum score",
+  "signal_sell": "Bottom 20% by 12-1 momentum score"
+}

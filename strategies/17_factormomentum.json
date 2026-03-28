@@ -1,0 +1,35 @@
+{
+  "id": 17,
+  "name": "Factor Momentum (MOM of MOM)",
+  "class": "FactorMomentum",
+  "type": "factor",
+  "subtype": "meta_strategy",
+  "description": "Applies the momentum principle to factors themselves rather than individual securities. If the Value factor has been outperforming recently, overweight Value in your portfolio. If Momentum factor has been lagging, underweight it. This 'meta' approach capitalizes on persistence in factor returns.",
+  "core_logic": "factor_score(f,t) = return(factor_f, t-63, t). Overweight factors with positive recent return, underweight those with negative. Rebalance monthly. Equivalent to time-series momentum applied to factor ETF returns.",
+  "parameters": {
+    "fast_momentum_days": 21,
+    "medium_momentum_days": 63,
+    "slow_momentum_days": 126,
+    "factors_tracked": ["momentum", "value", "quality", "low_volatility", "size"],
+    "signal_combination": "majority_vote",
+    "rebalance_frequency": "monthly"
+  },
+  "assets": ["factor_etfs", "equity_futures", "single_stocks_via_factor_tilts"],
+  "timeframe": "monthly_rebalance",
+  "holding_period_days": "20-63",
+  "sharpe_ratio": { "min": 0.6, "max": 1.2, "note": "incremental Sharpe improvement over static factor blend" },
+  "risk": {
+    "drawdown_max": "-20%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.4,
+    "main_risk": "Trend reversals in factor performance; factor overcrowding"
+  },
+  "pros": ["Simple to implement using factor ETFs", "Improves on static factor allocation", "Captures persistence documented in academic literature"],
+  "cons": ["Limited capacity as more investors adopt it", "Requires factor return history", "Adds modest alpha over static blend"],
+  "notable_firms": ["AQR (published research)", "Invesco factor team", "MSCI factor research"],
+  "key_papers": ["Factor Momentum Everywhere (Gupta & Kelly, JFE 2019)", "Time-Series Variation in Factor Premia (SSRN 2023)"],
+  "implementation_complexity": "low",
+  "requires_shorting": false,
+  "signal_buy": "All 3 momentum windows (21/63/126d) positive → full allocation to this factor",
+  "signal_sell": "All 3 momentum windows negative → reduce/eliminate factor allocation"
+}

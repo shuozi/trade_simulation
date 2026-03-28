@@ -1,0 +1,37 @@
+{
+  "id": 16,
+  "name": "Multi-Factor Long-Short Equity (Quality + Value + Momentum)",
+  "class": "MultiFactorLongShort",
+  "type": "factor",
+  "subtype": "smart_beta_long_short",
+  "description": "Combines multiple academic risk factors into a single composite score per stock. Quality (profitability, earnings stability), Value (P/E, P/B, EV/EBITDA), and Momentum (12-1 return) are blended with dynamic weights. Long high-scoring stocks, short low-scoring. Rebalance monthly.",
+  "core_logic": "composite_score(i) = w_mom * momentum_score + w_val * value_score + w_qual * quality_score. All scores normalized to z-scores within sector. Top/bottom 20% → long/short.",
+  "parameters": {
+    "momentum_weight": 0.40,
+    "value_weight": 0.30,
+    "quality_weight": 0.30,
+    "momentum_lookback": 252,
+    "value_metrics": ["P/E", "P/B", "EV/EBITDA"],
+    "quality_metrics": ["ROE", "profit_margin", "earnings_stability"],
+    "rebalance_frequency": "monthly",
+    "sector_neutralize": true
+  },
+  "assets": ["us_large_mid_cap_equities", "developed_markets"],
+  "timeframe": "monthly_rebalance",
+  "holding_period_days": "20-60",
+  "sharpe_ratio": { "min": 0.8, "max": 1.5, "note": "post-cost, net Sharpe typical range" },
+  "risk": {
+    "drawdown_max": "-25%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.3,
+    "main_risk": "Factor crowding; growth/value regime shifts"
+  },
+  "pros": ["Diversified across multiple uncorrelated factors", "Low correlation to market beta", "Well-documented academic foundations"],
+  "cons": ["Factor crowding compresses alpha", "Growth vs value rotation can hurt combined signal", "Monthly rebalance incurs transaction costs"],
+  "notable_firms": ["AQR Capital Management", "Dimensional Fund Advisors", "BlackRock Systematic", "GSAM Systematic"],
+  "key_papers": ["Fama & French 5-Factor Model (2015)", "Asness et al Value and Momentum Everywhere (2013)", "Quality Minus Junk (AQR 2019)"],
+  "implementation_complexity": "medium",
+  "requires_shorting": true,
+  "signal_buy": "Composite factor score > 80th percentile in sector",
+  "signal_sell": "Composite factor score < 20th percentile in sector"
+}

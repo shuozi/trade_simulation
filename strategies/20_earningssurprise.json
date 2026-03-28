@@ -1,0 +1,36 @@
+{
+  "id": 20,
+  "name": "Systematic Event-Driven: Earnings Surprise + Price Reaction",
+  "class": "EarningsSurprise",
+  "type": "event_driven",
+  "subtype": "systematic_earnings",
+  "description": "Systematically trade post-earnings announcement drift (PEAD): stocks with large positive earnings surprises continue to drift upward for 3-30 days after the announcement. The drift is stronger when: (1) the surprise is large, (2) analyst coverage is low, and (3) institutional ownership is low.",
+  "core_logic": "SUE = (EPS_actual - EPS_expected) / sigma_EPS. Enter long when SUE > 1.5 AND price_gap > +3% on earnings day. Enter short when SUE < -1.5 AND price_gap < -3%. Hold 5 days for drift capture.",
+  "parameters": {
+    "earnings_surprise_threshold_sue": 1.5,
+    "price_gap_threshold_pct": 3.0,
+    "drift_hold_days": 5,
+    "stop_loss_pct": -3.0,
+    "earnings_calendar_source": "FactSet / Bloomberg",
+    "min_market_cap_mm": 500,
+    "vol_normalize_sue": true
+  },
+  "assets": ["us_equities", "developed_markets_equities"],
+  "timeframe": "event_driven",
+  "holding_period_days": "1-10",
+  "sharpe_ratio": { "min": 1.0, "max": 2.0, "note": "PEAD alpha documented since 1968, persists in 2025" },
+  "risk": {
+    "drawdown_max": "-15%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.5,
+    "main_risk": "Earnings gaps can reverse; guidance disappointments post-initial reaction"
+  },
+  "pros": ["PEAD is one of the oldest documented anomalies", "Clear event catalyst", "Strong returns in small/mid cap", "Complementary to momentum strategies"],
+  "cons": ["Requires earnings calendar and EPS consensus data", "Trading around earnings increases transaction costs", "Short leg faces hard-to-borrow risk"],
+  "notable_firms": ["Citadel Equities", "Millennium pods", "AQR (documented in research)", "Systematic event-driven HFs"],
+  "key_papers": ["Ball & Brown (1968) — original PEAD", "Post-Earnings Announcement Drift (Bernard & Thomas 1989)", "Systematic Earnings Analysis (AQR 2024)"],
+  "implementation_complexity": "medium",
+  "requires_shorting": true,
+  "signal_buy": "SUE > 1.5 AND day-of-earnings price gap > +3%",
+  "signal_sell": "SUE < -1.5 AND day-of-earnings price gap < -3%"
+}

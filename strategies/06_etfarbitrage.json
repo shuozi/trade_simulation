@@ -1,0 +1,33 @@
+{
+  "id": 6,
+  "name": "Index Arbitrage / ETF Arbitrage",
+  "class": "ETFArbitrage",
+  "type": "stat_arb",
+  "subtype": "market_structure",
+  "description": "Exploits temporary mispricings between an ETF and its underlying basket of securities (or index futures). When an ETF trades at a premium or discount to its Net Asset Value (NAV), buy the cheaper and sell the expensive leg. The authorized participant (AP) creation/redemption mechanism ensures convergence.",
+  "core_logic": "Monitor premium_bps = (ETF_price - NAV) / NAV * 10000. BUY ETF when premium < -15bps, SELL ETF when premium > +15bps. Exit at ±3bps.",
+  "parameters": {
+    "entry_bps": 15,
+    "exit_bps": 3,
+    "basket_replication_cost_bps": 5,
+    "creation_delay_minutes": 1
+  },
+  "assets": ["equity_etfs", "bond_etfs", "commodity_etfs", "sp500_futures_vs_cash"],
+  "timeframe": "intraday_to_same_day",
+  "holding_period_days": "0.001-1",
+  "sharpe_ratio": { "min": 2.0, "max": 5.0, "note": "small per-opportunity profit, high certainty" },
+  "risk": {
+    "drawdown_max": "-5%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.5,
+    "main_risk": "Execution risk; basket liquidity during stress"
+  },
+  "pros": ["Near-riskless when mispricing exists", "Provides valuable market liquidity", "Foundation of Jane Street business"],
+  "cons": ["Dominated by HFT firms", "Tiny per-unit profits (0.5-5bps)", "Requires massive scale and speed", "Regulatory scrutiny (SEBI vs Jane Street 2025)"],
+  "notable_firms": ["Jane Street ($10.1B Q2-2025 revenue)", "Citadel Securities", "SIG", "Hudson River Trading"],
+  "key_papers": ["ETF Arbitrage and Market Efficiency — various"],
+  "implementation_complexity": "very_high",
+  "requires_shorting": true,
+  "signal_buy": "ETF premium < -15 basis points",
+  "signal_sell": "ETF premium > +15 basis points"
+}

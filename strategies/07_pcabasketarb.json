@@ -1,0 +1,36 @@
+{
+  "id": 7,
+  "name": "Multi-Leg Statistical Arbitrage (Basket / PCA-Based)",
+  "class": "PCABasketArb",
+  "type": "stat_arb",
+  "subtype": "machine_learning",
+  "description": "Decompose a large universe of equities (500-3000 stocks) using Principal Component Analysis (PCA) to isolate common risk factors. The residuals from the factor model represent idiosyncratic components. Trade the mean-reversion of these residuals when they diverge significantly.",
+  "core_logic": "R = F*B + epsilon. When z-score(epsilon_i) > 2, expect reversion. Trade hundreds of positions simultaneously in a market-neutral book. Factor neutralize (beta, sector, size).",
+  "parameters": {
+    "n_components": 5,
+    "entry_z": 2.0,
+    "exit_z": 0.5,
+    "halflife_days": 10,
+    "ou_halflife_min_days": 5,
+    "ou_halflife_max_days": 20,
+    "universe_size": 500
+  },
+  "assets": ["us_large_mid_cap_equities", "fx", "futures"],
+  "timeframe": "daily_to_weekly",
+  "holding_period_days": "5-20",
+  "sharpe_ratio": { "min": 1.5, "max": 3.0, "note": "institutional implementations" },
+  "risk": {
+    "drawdown_max": "-25%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.1,
+    "main_risk": "Crowded unwind events (Quant Quake Aug 2007, Mar 2020)"
+  },
+  "pros": ["Extremely scalable vs pairwise", "Well-diversified across hundreds of positions", "Industry standard at top HFs"],
+  "cons": ["Complex infrastructure required", "Correlated losses during quant quakes", "Requires proprietary factor risk model"],
+  "notable_firms": ["D.E. Shaw (pioneers)", "Citadel Equities", "Millennium Management", "Point72"],
+  "key_papers": ["Advanced Statistical Arbitrage with RL (arXiv 2024)", "AQR Building Better Equity Market Neutral"],
+  "implementation_complexity": "very_high",
+  "requires_shorting": true,
+  "signal_buy": "PCA residual z-score < -2.0 (undervalued vs factor model)",
+  "signal_sell": "PCA residual z-score > +2.0 (overvalued vs factor model)"
+}

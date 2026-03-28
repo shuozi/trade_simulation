@@ -1,0 +1,36 @@
+{
+  "id": 5,
+  "name": "Classic Pairs Trading (Cointegration-Based)",
+  "class": "PairsTrading",
+  "type": "stat_arb",
+  "subtype": "mean_reversion",
+  "description": "Identify two historically cointegrated assets (e.g. Coca-Cola / PepsiCo). Model their log-price spread as a stationary process using Engle-Granger or Johansen cointegration test. Trade the spread: buy the cheap leg, sell the expensive leg when divergence exceeds 2 standard deviations.",
+  "core_logic": "Spread = log(P_A) - hedge_ratio * log(P_B). Z-score = (spread - mu) / sigma. BUY when z < -2, SELL when z > +2, EXIT at |z| < 0.5.",
+  "parameters": {
+    "window": 252,
+    "entry_z": 2.0,
+    "exit_z": 0.5,
+    "stop_loss_z": 3.5,
+    "hedge_ratio_method": "kalman_filter",
+    "cointegration_test": "engle_granger",
+    "p_value_threshold": 0.05
+  },
+  "assets": ["equities_sector_pairs", "etf_pairs", "futures_pairs", "crypto_pairs"],
+  "timeframe": "daily",
+  "holding_period_days": "15-25",
+  "sharpe_ratio": { "min": 1.0, "max": 2.0 },
+  "risk": {
+    "drawdown_max": "-20%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.1,
+    "main_risk": "Cointegration breakdown (permanent regime change, M&A)"
+  },
+  "pros": ["Market neutral", "Clear entry/exit rules", "Decades of academic support", "Profits in bull and bear markets"],
+  "cons": ["Pairs can diverge permanently", "Increasingly crowded", "Hard-to-borrow risk on shorts"],
+  "notable_firms": ["D.E. Shaw (originator)", "Morgan Stanley Stat Arb desk", "Citadel"],
+  "key_papers": ["Gatev, Goetzmann & Rouwenhorst (2006)"],
+  "implementation_complexity": "medium",
+  "requires_shorting": true,
+  "signal_buy": "Z-score < -2.0 (spread too low → long A, short B)",
+  "signal_sell": "Z-score > +2.0 (spread too high → short A, long B)"
+}

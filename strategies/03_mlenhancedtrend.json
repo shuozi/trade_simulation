@@ -1,0 +1,35 @@
+{
+  "id": 3,
+  "name": "Multi-Asset Trend Following with ML Signal Enhancement",
+  "class": "MLEnhancedTrend",
+  "type": "momentum",
+  "subtype": "ml_enhanced_cta",
+  "description": "Traditional CTA trend following (EWMA crossover) augmented with a machine learning layer that predicts whether a trend signal will follow through or reverse. ML model ingests cross-asset correlations, macro regime indicators, VIX term structure, and COT positioning data.",
+  "core_logic": "Base signals: EWMA fast(32) / slow(128) crossover. ML model (XGBoost or LSTM) scores signal quality 0-1. Final position = direction * ML_quality_score * vol_scaled_size.",
+  "parameters": {
+    "fast_span": 32,
+    "slow_span": 128,
+    "vol_target": 0.15,
+    "ml_model": "gradient_boosting",
+    "features": ["cross_asset_corr", "vix_term_structure", "cot_positioning", "macro_regime"],
+    "retrain_frequency": "weekly"
+  },
+  "assets": ["equity_futures", "bond_futures", "commodity_futures", "fx_futures"],
+  "timeframe": "medium_term",
+  "holding_period_days": "5-60",
+  "sharpe_ratio": { "min": 0.8, "max": 1.5, "note": "ML adds ~0.1-0.3 Sharpe vs pure trend" },
+  "risk": {
+    "drawdown_max": "-25%",
+    "crisis_alpha": true,
+    "equity_correlation": -0.1,
+    "main_risk": "Model overfitting in regime-specific failures"
+  },
+  "pros": ["Adapts to regime changes", "Combines trend robustness with ML refinement", "Actively used by top CTAs"],
+  "cons": ["Black-box opacity", "Requires large data science team", "Limited training data in finance"],
+  "notable_firms": ["Man AHL (AHL Evolution)", "Two Sigma", "D.E. Shaw", "Winton"],
+  "key_papers": ["arXiv hybrid CTA+ML papers (2024-2025)"],
+  "implementation_complexity": "high",
+  "requires_shorting": true,
+  "signal_buy": "EWMA fast > slow AND ML quality score > threshold",
+  "signal_sell": "EWMA fast < slow AND ML quality score > threshold"
+}

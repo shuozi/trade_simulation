@@ -1,0 +1,35 @@
+{
+  "id": 4,
+  "name": "Short-Term Reversal (Intraday / Weekly Mean Reversion)",
+  "class": "ShortTermReversal",
+  "type": "momentum",
+  "subtype": "contrarian_reversal",
+  "description": "Exploits the empirical finding that stocks performing best (worst) over very short horizons (1-5 days) tend to reverse. Driven by bid-ask bounce, microstructure effects, and short-term liquidity provision dynamics. Buy recent losers, short recent winners.",
+  "core_logic": "Signal = -sign(return_past_N_days). Entry when |return| > threshold AND RSI is in extreme zone. Exit after 1-5 days or at mean reversion.",
+  "parameters": {
+    "reversal_days": 5,
+    "entry_threshold_pct": 4.0,
+    "rsi_period": 7,
+    "rsi_oversold": 35,
+    "rsi_overbought": 65,
+    "hold_days": 5
+  },
+  "assets": ["us_large_cap_equities", "sp500_components", "russell_2000"],
+  "timeframe": "intraday_to_weekly",
+  "holding_period_days": "1-5",
+  "sharpe_ratio": { "min": 0.5, "max": 1.2, "note": "net of transaction costs" },
+  "risk": {
+    "drawdown_max": "-15%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.0,
+    "main_risk": "High transaction costs; momentum continuation risk"
+  },
+  "pros": ["Uncorrelated to standard momentum", "Strong in high-dispersion regimes", "Can be market-neutral"],
+  "cons": ["Extremely capacity-constrained", "200-400% monthly turnover", "Competes with HFT market makers"],
+  "notable_firms": ["AQR Capital", "Citadel Equities", "Millennium pods"],
+  "key_papers": ["Jegadeesh (1990)", "Lehmann (1990)", "Short-Term Reversal Returns and Bid-Ask Spreads"],
+  "implementation_complexity": "medium",
+  "requires_shorting": true,
+  "signal_buy": "Week return < -4% AND RSI(7) < 35",
+  "signal_sell": "Week return > +4% AND RSI(7) > 65"
+}

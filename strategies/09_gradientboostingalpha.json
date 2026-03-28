@@ -1,0 +1,37 @@
+{
+  "id": 9,
+  "name": "Gradient Boosting Ensemble Alpha (GBEA)",
+  "class": "GradientBoostingAlpha",
+  "type": "machine_learning",
+  "subtype": "cross_sectional_equity",
+  "description": "Train an ensemble of gradient-boosted decision trees (XGBoost, LightGBM, CatBoost) on 100-500+ features to predict 5-21 day forward returns. Features span technical indicators, fundamental ratios, alternative data signals, and macro variables. Long top-scored stocks, short bottom-scored.",
+  "core_logic": "score(i,t) = GBDT(features(i,t)). Features include: 5/10/20/60d returns, RSI, MACD, Bollinger position, volume ratios, P/E, earnings revisions, sentiment scores. Retrain rolling 252-day window weekly.",
+  "parameters": {
+    "n_estimators": 200,
+    "max_depth": 4,
+    "learning_rate": 0.05,
+    "train_window": 252,
+    "predict_horizon_days": 5,
+    "top_pct": 0.2,
+    "feature_count": 150,
+    "retrain_frequency": "weekly"
+  },
+  "assets": ["us_equities", "developed_markets_equities"],
+  "timeframe": "weekly_rebalance",
+  "holding_period_days": "5-21",
+  "sharpe_ratio": { "min": 1.0, "max": 2.0, "note": "net of costs, quality implementations" },
+  "risk": {
+    "drawdown_max": "-20%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.3,
+    "main_risk": "Overfitting; feature regime changes"
+  },
+  "pros": ["Captures complex non-linear interactions", "Handles 100+ features naturally", "Interpretable via SHAP values", "Widely adopted at hedge funds"],
+  "cons": ["Overfitting risk", "Feature importance unstable across regimes", "High infrastructure cost"],
+  "notable_firms": ["Two Sigma", "Citadel", "WorldQuant", "PDT Partners"],
+  "key_papers": ["Can Machine Learning Explain Returns? (AQR 2023)", "Gu, Kelly & Xiu (2020) RFS"],
+  "implementation_complexity": "high",
+  "requires_shorting": true,
+  "signal_buy": "GBDT score > 80th percentile across universe",
+  "signal_sell": "GBDT score < 20th percentile across universe"
+}

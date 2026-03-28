@@ -1,0 +1,35 @@
+{
+  "id": 11,
+  "name": "LLM-Driven Earnings and Filings Alpha",
+  "class": "LLMEarningsAlpha",
+  "type": "machine_learning",
+  "subtype": "nlp_fundamental_ai",
+  "description": "Large language models (GPT-4o, Claude, Llama) read earnings call transcripts, 10-K/10-Q filings, and analyst reports. They generate structured sentiment scores, risk flag counts, and management tone assessments. The resulting alpha signal predicts post-earnings price drift.",
+  "core_logic": "LLM_score = model.analyze(earnings_transcript). Signal = f(sentiment_score, surprise_magnitude, guidance_tone). Post-earnings drift: stocks with positive LLM score + positive price reaction drift upward 3-10 days.",
+  "parameters": {
+    "llm_model": "claude-sonnet-4-6",
+    "text_sources": ["earnings_transcript", "10K_filing", "analyst_reports"],
+    "score_dimensions": ["sentiment", "risk_flags", "guidance_tone", "management_confidence"],
+    "drift_window_days": 5,
+    "min_surprise_pct": 2.0,
+    "signal_decay_halflife_days": 3
+  },
+  "assets": ["us_equities", "developed_markets_equities"],
+  "timeframe": "event_driven",
+  "holding_period_days": "1-10",
+  "sharpe_ratio": { "min": 1.0, "max": 2.5, "note": "early adopter advantage before crowding" },
+  "risk": {
+    "drawdown_max": "-15%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.4,
+    "main_risk": "LLM hallucinations; API costs; regulatory NDA concerns"
+  },
+  "pros": ["Processes information faster than analysts", "Detects subtle tone changes", "Complementary to price-based signals"],
+  "cons": ["LLMs can hallucinate", "API costs at scale ($0.01-0.10 per transcript)", "Crowding as LLM strategies proliferate 2025"],
+  "notable_firms": ["Two Sigma", "DE Shaw", "Point72", "Various LLM-first startups 2024-2025"],
+  "key_papers": ["LLMs for Quantitative Finance (arXiv 2024)", "FinGPT research papers"],
+  "implementation_complexity": "high",
+  "requires_shorting": false,
+  "signal_buy": "LLM sentiment > 0.3 AND price gap > 0 on earnings day",
+  "signal_sell": "LLM sentiment < -0.3 AND price gap < 0 on earnings day"
+}

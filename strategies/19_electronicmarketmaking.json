@@ -1,0 +1,36 @@
+{
+  "id": 19,
+  "name": "Electronic Market Making (Quote-Driven HFT)",
+  "class": "ElectronicMarketMaking",
+  "type": "market_making",
+  "subtype": "hft_quote_driven",
+  "description": "Post simultaneous bid and ask quotes around the theoretical fair value of an asset. Profit from the bid-ask spread when orders hit both sides. Manage inventory to avoid directional exposure. Cancel and requote in microseconds as fair value changes. Uses ultra-low-latency infrastructure (co-location, FPGA).",
+  "core_logic": "fair_value = mid_price (NBBO). bid = fair_value - spread/2. ask = fair_value + spread/2. Inventory model (Avellaneda-Stoikov): adjust quotes toward mean-reverting inventory target. Cancel all quotes if volatility spikes.",
+  "parameters": {
+    "target_spread_bps": 5,
+    "inventory_limit_shares": 10000,
+    "cancel_on_vol_spike": true,
+    "quote_size": 100,
+    "requote_latency_microseconds": 50,
+    "fair_value_model": "Avellaneda_Stoikov",
+    "adverse_selection_filter": true
+  },
+  "assets": ["us_equities", "equity_futures", "fx_spot", "crypto_spot"],
+  "timeframe": "microseconds_to_milliseconds",
+  "holding_period_days": "0.00001",
+  "sharpe_ratio": { "min": 3.0, "max": 10.0, "note": "extremely high but capacity-limited" },
+  "risk": {
+    "drawdown_max": "-10%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.6,
+    "main_risk": "Adverse selection (being picked off by informed traders)"
+  },
+  "pros": ["Extremely high Sharpe ratio", "Provides essential market liquidity", "Positive expected value by construction"],
+  "cons": ["Requires co-location and FPGA infrastructure ($1M+/year)", "Dominated by 5-10 global firms", "Regulatory scrutiny", "Adverse selection from informed flow"],
+  "notable_firms": ["Jane Street", "Citadel Securities", "Virtu Financial", "Hudson River Trading", "IMC"],
+  "key_papers": ["High-Frequency Trading and Market Quality (Menkveld 2013)", "Avellaneda-Stoikov Market Making Model (2008)"],
+  "implementation_complexity": "extreme",
+  "requires_shorting": true,
+  "signal_buy": "Post bid quotes when spread environment > 2x target spread",
+  "signal_sell": "Post ask quotes simultaneously (both sides always quoted)"
+}

@@ -1,0 +1,36 @@
+{
+  "id": 10,
+  "name": "Deep Reinforcement Learning (DRL) Trading Agent",
+  "class": "DeepRLAgent",
+  "type": "machine_learning",
+  "subtype": "ai_adaptive",
+  "description": "An RL agent learns to trade by interacting with a simulated market environment. State = vector of market features. Actions = {buy, sell, hold}. Reward = risk-adjusted return (Sharpe or Calmar ratio). Agent trained via Proximal Policy Optimization (PPO) or Deep Q-Networks (DQN).",
+  "core_logic": "State = [RSI, MACD_hist, trend, vol, position]. Q(s,a) = expected cumulative reward from state s taking action a. Policy: argmax_a Q(s,a). Training: replay buffer + target network + PPO clipping.",
+  "parameters": {
+    "state_features": ["rsi_14", "macd_hist", "bb_position", "vol_20d", "trend_50d", "position"],
+    "action_space": ["buy", "sell", "hold"],
+    "algorithm": "PPO",
+    "reward_function": "sharpe_ratio",
+    "hidden_layers": [256, 128, 64],
+    "training_episodes": 1000,
+    "lookback_window": 20
+  },
+  "assets": ["equities", "crypto", "futures"],
+  "timeframe": "daily",
+  "holding_period_days": "1-30",
+  "sharpe_ratio": { "min": 0.8, "max": 2.0, "note": "highly variable; depends on training quality" },
+  "risk": {
+    "drawdown_max": "-30%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.2,
+    "main_risk": "Overfitting to historical regime; distribution shift"
+  },
+  "pros": ["Learns complex patterns without feature engineering", "Adapts to changing regimes online", "Can incorporate transaction costs in reward"],
+  "cons": ["Extremely hard to train robustly", "Black-box; no interpretability", "Requires huge compute", "Often overfits backtests"],
+  "notable_firms": ["Two Sigma (RL research)", "Jane Street", "DeepMind (AlphaCode Finance)"],
+  "key_papers": ["Deep RL for Trading (arXiv 2023-2025)", "FinRL library (Columbia DRL4Finance)"],
+  "implementation_complexity": "very_high",
+  "requires_shorting": true,
+  "signal_buy": "Agent Q(s, buy) > Q(s, sell) and Q(s, buy) > threshold",
+  "signal_sell": "Agent Q(s, sell) > Q(s, buy) and Q(s, sell) > threshold"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 13,
+  "name": "Volatility Risk Premium (VRP) Harvesting",
+  "class": "VolatilityRiskPremium",
+  "type": "volatility",
+  "subtype": "options_premium_selling",
+  "description": "Implied volatility (what options market prices in) systematically exceeds realized volatility (what actually happens) by ~2-4 vol points on average. This 'volatility risk premium' exists because investors pay up for protection. The strategy sells options or variance swaps to systematically collect this premium.",
+  "core_logic": "VRP = IV - RV (in vol points). Sell straddles/strangles or short VIX futures when VRP > threshold. Delta-hedge to isolate vol exposure. Exit when IV reverts toward RV.",
+  "parameters": {
+    "rv_window": 21,
+    "vrp_threshold_vol_points": 2.0,
+    "instrument": ["short_straddle", "variance_swap", "short_vix_futures"],
+    "delta_hedge_frequency": "daily",
+    "position_size_vol_target": 0.10
+  },
+  "assets": ["equity_index_options", "vix_futures", "single_stock_options"],
+  "timeframe": "weekly_to_monthly",
+  "holding_period_days": "5-30",
+  "sharpe_ratio": { "min": 0.8, "max": 1.5, "note": "strong negative skew; crashes in vol spikes" },
+  "risk": {
+    "drawdown_max": "-50% during vol spikes (Feb 2018 VIX event)",
+    "crisis_alpha": false,
+    "equity_correlation": 0.6,
+    "main_risk": "Vega blowup in sudden volatility spikes (VIX > 40)"
+  },
+  "pros": ["Positive expected return from risk premium", "Consistent income in calm markets", "Well-understood academically"],
+  "cons": ["Severe losses during volatility spikes", "Negative skewness (small gains, rare catastrophic losses)", "Killed several funds (VelocityShares XIV Feb 2018)"],
+  "notable_firms": ["AQR (systematic VRP strategies)", "Societe Generale Derivatives", "Various vol arb desks"],
+  "key_papers": ["Variance Risk Premia (Carr & Wu 2009)", "Volatility Risk Premium AQR (2012)"],
+  "implementation_complexity": "high",
+  "requires_shorting": true,
+  "signal_buy": "VRP < -2.0 vol points (IV unusually cheap → buy volatility)",
+  "signal_sell": "VRP > +2.0 vol points (IV unusually expensive → sell volatility)"
+}

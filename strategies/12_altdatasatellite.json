@@ -1,0 +1,34 @@
+{
+  "id": 12,
+  "name": "Alternative Data: Satellite + Credit Card Signal",
+  "class": "AltDataSatellite",
+  "type": "machine_learning",
+  "subtype": "alternative_data",
+  "description": "Uses non-traditional data sources to predict company revenues before official earnings. Satellite imagery tracks parking lot occupancy at retailers, oil tank levels for energy, and cargo ship movements. Credit card panels from Affinity/Second Measure provide real-time consumer spending by company.",
+  "core_logic": "alt_score = satellite_activity_zscore * 0.5 + cc_spend_growth * 0.5. If alt_score > threshold before earnings date, expect upside surprise → BUY. Volume anomaly used as proxy for alt data signal in this implementation.",
+  "parameters": {
+    "volume_z_threshold": 2.0,
+    "lookback": 60,
+    "signal_lead_days": 5,
+    "data_providers": ["Orbital Insight", "RS Metrics", "Affinity Solutions", "Second Measure"],
+    "alt_data_update_frequency": "weekly"
+  },
+  "assets": ["retail_equities", "energy_equities", "consumer_discretionary"],
+  "timeframe": "weekly",
+  "holding_period_days": "5-20",
+  "sharpe_ratio": { "min": 1.2, "max": 2.5, "note": "alpha decays as data becomes commoditized" },
+  "risk": {
+    "drawdown_max": "-20%",
+    "crisis_alpha": false,
+    "equity_correlation": 0.4,
+    "main_risk": "Data quality issues; signal decay as data becomes widespread"
+  },
+  "pros": ["Genuine informational edge", "Non-overlapping with traditional quant signals", "Large AUM capacity in equity markets"],
+  "cons": ["Expensive data ($500K-$5M/year per dataset)", "Alpha decays as adoption grows", "Data vendor concentration risk"],
+  "notable_firms": ["Two Sigma (alt data pioneers)", "Renaissance Technologies", "Millennium", "Point72"],
+  "key_papers": ["Alternative Data for Finance (JP Morgan 2024)", "Satellite Data and Stock Returns (SSRN)"],
+  "implementation_complexity": "very_high",
+  "requires_shorting": false,
+  "signal_buy": "Volume z-score > 2.0 AND price return positive (demand surge confirmation)",
+  "signal_sell": "Volume z-score > 2.0 AND price return negative (supply surge / selling)"
+}
