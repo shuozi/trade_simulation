@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(pip list:*)",
+      "Bash(pip install:*)",
+      "Bash(python -c \"import yfinance; print\\(''yfinance'', yfinance.__version__\\)\")",
+      "Bash(python -c \"import akshare; print\\(''akshare'', akshare.__version__\\)\")",
+      "Bash(python3 -c \"import pandas; print\\(''pandas ok''\\)\")",
+      "Read(//usr/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(/usr/bin/python3 --version)",
+      "Bash(/usr/bin/python3 -c \"import pandas; print\\(''pandas'', pandas.__version__\\)\")",
+      "Bash(/usr/bin/python3 -m pip install pandas yfinance -q)"
+    ]
+  }
+}
