@@ -1,0 +1,238 @@
+symbol,price,signal,score,confidence,buy_votes,sell_votes,ret_1d,ret_5d,ret_1mo,ret_3mo,vol_ann,reason,sig_trend,sig_momentum,sig_rsi,sig_macd,sig_bollinger,sig_volume,sig_reversal,sig_volatility
+AAPL,272.845,NEUTRAL,0,0.0,3,3,0.97,39.89,39.89,39.89,22.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +27.6% | RSI=78.3 (overbought),1,1,-1,1,-1,0,-1,0
+AXP,332.06,NEUTRAL,-1,12.5,1,2,0.11,14.59,14.59,14.59,23.3,RSI=83.3 (overbought) | MACD line above signal | Near upper band (BB%=0.90),0,0,-1,1,-1,0,0,0
+CSCO,87.63,NEUTRAL,0,0.0,3,3,1.6,37.22,37.22,37.22,28.2,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +22.3% | RSI=88.0 (overbought),1,1,-1,1,-1,0,-1,0
+BA,222.76,NEUTRAL,0,0.0,2,2,-0.28,11.24,11.24,11.24,34.2,Price > SMA50 > SMA200 (uptrend) | RSI=80.9 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,0
+CVX,184.26,WEAK BUY,2,25.0,3,1,0.15,27.8,27.8,27.8,30.7,12-1mo return: +39.7% | RSI=22.7 (oversold) | MACD line below signal,0,1,1,-1,1,0,0,0
+CRM,185.46,SELL,-3,37.5,1,4,1.82,-28.89,-28.89,-28.89,44.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -25.4% | MACD line above signal,-1,-1,0,1,-1,0,-1,0
+AMGN,351.8,WEAK BUY,2,25.0,2,0,-0.99,24.0,24.0,24.0,19.3,12-1mo return: +23.3% | MACD line above signal,0,1,0,1,0,0,0,0
+CAT,796.3,NEUTRAL,1,12.5,3,2,0.21,124.61,124.61,124.61,42.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +94.2% | RSI=81.7 (overbought),1,1,-1,1,-1,0,0,0
+HON,230.65,NEUTRAL,1,12.5,2,1,-1.24,12.13,12.13,12.13,21.7,12-1mo return: +11.3% | RSI=59.5 (bearish zone) | MACD line above signal,0,1,-1,1,0,0,0,0
+DOW,37.045,BUY,3,37.5,4,1,4.06,31.08,31.08,31.08,61.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +32.7% | RSI=35.9 (bullish zone),1,1,1,-1,1,0,0,0
+GS,934.61,NEUTRAL,1,12.5,3,2,0.94,51.97,51.97,51.97,31.4,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +31.6% | RSI=83.6 (overbought),1,1,-1,1,-1,0,0,0
+DIS,106.395,WEAK SELL,-2,25.0,1,3,0.1,-8.94,-8.94,-8.94,24.5,12-1mo return: -15.1% | RSI=90.3 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+JNJ,233.06,WEAK BUY,2,25.0,3,1,-0.48,55.87,55.87,55.87,14.1,12-1mo return: +58.9% | RSI=29.9 (oversold) | MACD line below signal,0,1,1,-1,1,0,0,0
+IBM,253.3,WEAK SELL,-2,25.0,1,3,-0.07,-8.89,-8.89,-8.89,29.5,RSI=65.7 (bearish zone) | MACD line above signal | Near upper band (BB%=0.93),0,0,-1,1,-1,0,-1,0
+KO,76.02,NEUTRAL,0,0.0,1,1,0.37,11.56,11.56,11.56,15.1,12-1mo return: +10.9% | MACD line below signal,0,1,0,-1,0,0,0,0
+INTC,65.8999,NEUTRAL,1,12.5,3,2,-3.8,216.83,216.83,216.83,74.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +122.0% | RSI=87.8 (overbought),1,1,-1,1,-1,0,0,0
+HD,347.68,WEAK SELL,-2,25.0,1,3,-0.49,1.57,1.57,1.57,32.0,Price < SMA50 < SMA200 (downtrend) | RSI=66.2 (bearish zone) | MACD line above signal,-1,0,-1,1,-1,0,0,0
+MMM,152.07,WEAK SELL,-2,25.0,1,3,-1.6,8.37,8.37,8.37,25.7,Price < SMA50 < SMA200 (downtrend) | RSI=72.5 (overbought) | MACD line above signal,-1,0,-1,1,-1,0,0,0
+PG,145.62,NEUTRAL,0,0.0,1,1,-0.89,-6.2,-6.2,-6.2,18.0,MACD line above signal | Near upper band (BB%=0.79),0,0,0,1,-1,0,0,0
+MRK,118.5,NEUTRAL,0,0.0,1,1,-0.48,55.32,55.32,55.32,24.6,12-1mo return: +49.7% | MACD line below signal,0,1,0,-1,0,0,0,0
+MSFT,417.47,SELL,-3,37.5,1,4,-1.26,-12.16,-12.16,-12.16,30.5,12-1mo return: -18.1% | RSI=86.6 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+MCD,308.97,NEUTRAL,1,12.5,1,0,-0.77,7.53,7.53,7.53,14.5,MACD line above signal,0,0,0,1,0,0,0,0
+TRV,304.115,WEAK BUY,2,25.0,4,2,1.1,16.36,16.36,16.36,18.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +13.6% | RSI=68.8 (bearish zone),1,1,-1,1,-1,0,0,1
+UNH,323.64,NEUTRAL,-1,12.5,1,2,-0.3,6.98,6.98,6.98,41.0,RSI=92.5 (overbought) | MACD line above signal | Near upper band (BB%=0.85),0,0,-1,1,-1,0,0,0
+JPM,315.46,NEUTRAL,-1,12.5,1,2,1.67,19.32,19.32,19.32,24.7,RSI=82.4 (overbought) | MACD line above signal | Near upper band (BB%=0.86),0,0,-1,1,-1,0,0,0
+NKE,46.105,NEUTRAL,1,12.5,2,1,0.16,-21.75,-21.75,-21.75,62.6,Price < SMA50 < SMA200 (downtrend) | RSI=35.6 (bullish zone) | MACD line above signal,-1,0,1,1,0,0,0,0
+VZ,46.795,WEAK BUY,2,25.0,3,1,0.53,19.35,19.35,19.35,20.6,12-1mo return: +24.3% | RSI=30.0 (oversold) | MACD line below signal,0,1,1,-1,1,0,0,0
+IWM,277.0599,WEAK BUY,2,25.0,4,2,0.46,33.91,33.91,33.91,22.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +19.7% | RSI=98.3 (overbought),1,1,-1,1,-1,0,0,1
+SPY,707.6799,WEAK BUY,2,25.0,4,2,-0.35,19.79,19.79,19.79,18.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +11.4% | RSI=96.4 (overbought),1,1,-1,1,-1,0,0,1
+V,313.98,WEAK SELL,-2,25.0,1,3,-0.96,-11.75,-11.75,-11.75,19.7,12-1mo return: -15.8% | RSI=67.9 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+QQQ,644.71,WEAK BUY,2,25.0,4,2,-0.64,22.44,22.44,22.44,22.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +12.5% | RSI=95.6 (overbought),1,1,-1,1,-1,0,0,1
+WMT,128.405,NEUTRAL,1,12.5,3,2,0.71,37.12,37.12,37.12,24.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +29.0% | RSI=60.6 (bearish zone),1,1,-1,1,-1,0,0,0
+DIA,494.0,WEAK BUY,2,25.0,4,2,-0.04,18.48,18.48,18.48,17.2,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +10.3% | RSI=90.5 (overbought),1,1,-1,1,-1,0,0,1
+VT,150.245,WEAK BUY,2,25.0,4,2,-0.39,22.64,22.64,22.64,20.0,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +13.6% | RSI=94.9 (overbought),1,1,-1,1,-1,0,0,1
+VTI,349.724,WEAK BUY,2,25.0,4,2,-0.23,20.36,20.36,20.36,18.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +11.7% | RSI=97.0 (overbought),1,1,-1,1,-1,0,0,1
+XLE,55.41,WEAK BUY,2,25.0,3,1,0.71,29.01,29.01,29.01,27.2,12-1mo return: +37.3% | RSI=22.0 (oversold) | MACD line below signal,0,1,1,-1,1,0,0,0
+SCHB,27.365,WEAK BUY,2,25.0,4,2,-0.24,20.17,20.17,20.17,18.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +11.4% | RSI=97.3 (overbought),1,1,-1,1,-1,0,0,1
+ITOT,155.21,WEAK BUY,2,25.0,4,2,-0.24,20.27,20.27,20.27,18.2,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +11.5% | RSI=96.7 (overbought),1,1,-1,1,-1,0,0,1
+XLF,52.595,NEUTRAL,-1,12.5,1,2,0.31,6.3,6.3,6.3,17.7,RSI=87.6 (overbought) | MACD line above signal | Near upper band (BB%=0.89),0,0,-1,1,-1,0,0,0
+XLI,173.73,WEAK BUY,2,25.0,4,2,0.13,23.52,23.52,23.52,24.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +16.3% | RSI=82.3 (overbought),1,1,-1,1,-1,0,0,1
+XLK,153.675,NEUTRAL,1,12.5,3,2,-0.44,28.09,28.09,28.09,27.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +15.2% | RSI=97.5 (overbought),1,1,-1,1,-1,0,0,0
+XLU,46.235,WEAK BUY,2,25.0,3,1,0.16,18.36,18.36,18.36,9.9,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +18.3% | MACD line below signal,1,1,0,-1,0,0,0,1
+XLV,148.41,NEUTRAL,0,0.0,2,2,-0.26,13.18,13.18,13.18,15.9,12-1mo return: +11.3% | RSI=63.2 (bearish zone) | MACD line above signal,0,1,-1,1,-1,0,0,0
+XLY,119.37,NEUTRAL,-1,12.5,1,2,-0.86,14.4,14.4,14.4,26.4,RSI=80.2 (overbought) | MACD line above signal | Near upper band (BB%=0.92),0,0,-1,1,-1,0,0,0
+XLP,82.605,NEUTRAL,0,0.0,1,1,0.18,5.41,5.41,5.41,13.8,MACD line above signal | Near upper band (BB%=0.78),0,0,0,1,-1,0,0,0
+QUAL,206.37,WEAK BUY,2,25.0,4,2,-0.27,16.97,16.97,16.97,18.9,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +10.1% | RSI=91.6 (overbought),1,1,-1,1,-1,0,0,1
+XLC,118.94,WEAK BUY,2,25.0,4,2,-0.13,16.43,16.43,16.43,18.4,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +10.4% | RSI=96.0 (overbought),1,1,-1,1,-1,0,0,1
+VTV,204.66,WEAK BUY,2,25.0,4,2,0.21,20.99,20.99,20.99,12.0,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +15.5% | RSI=83.7 (overbought),1,1,-1,1,-1,0,0,1
+XLB,52.355,WEAK BUY,2,25.0,4,2,0.92,22.35,22.35,22.35,17.7,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +11.1% | RSI=78.1 (overbought),1,1,-1,1,-1,0,0,1
+XLRE,44.595,NEUTRAL,1,12.5,3,2,0.26,10.5,10.5,10.5,11.4,Price > SMA50 > SMA200 (uptrend) | RSI=98.7 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+MTUM,273.0,NEUTRAL,1,12.5,3,2,-0.53,19.43,19.43,19.43,28.0,Price > SMA50 > SMA200 (uptrend) | RSI=96.1 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+USMV,94.97,NEUTRAL,1,12.5,3,2,0.12,4.36,4.36,4.36,10.2,Price > SMA50 > SMA200 (uptrend) | RSI=74.9 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+NOBL,109.17,NEUTRAL,1,12.5,3,2,0.33,12.53,12.53,12.53,11.6,Price > SMA50 > SMA200 (uptrend) | RSI=74.9 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+DGRO,73.275,WEAK BUY,2,25.0,4,2,0.12,19.73,19.73,19.73,11.6,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +13.6% | RSI=89.5 (overbought),1,1,-1,1,-1,0,0,1
+VUG,490.435,NEUTRAL,-1,12.5,1,2,-0.71,17.2,17.2,17.2,25.0,RSI=95.5 (overbought) | MACD line above signal | Near upper band (BB%=0.90),0,0,-1,1,-1,0,0,0
+COWZ,63.2844,WEAK BUY,2,25.0,4,2,0.39,17.89,17.89,17.89,9.7,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +15.8% | RSI=64.7 (bearish zone),1,1,-1,1,-1,0,0,1
+BIL,91.5599,WEAK BUY,2,25.0,3,1,0.01,3.27,3.27,3.27,0.2,Price > SMA50 > SMA200 (uptrend) | MACD bullish crossover | Near upper band (BB%=0.91),1,0,0,1,-1,0,0,1
+IEF,95.7903,NEUTRAL,1,12.5,3,2,-0.15,4.64,4.64,4.64,5.7,Price > SMA50 > SMA200 (uptrend) | RSI=64.3 (bearish zone) | MACD line above signal,1,0,-1,1,-1,0,0,1
+SHY,82.605,NEUTRAL,1,12.5,3,2,-0.04,3.32,3.32,3.32,1.7,Price > SMA50 > SMA200 (uptrend) | RSI=73.5 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+TLT,86.915,NEUTRAL,-1,12.5,1,2,-0.18,4.27,4.27,4.27,9.4,RSI=55.8 (bearish zone) | MACD line above signal | Near upper band (BB%=0.72),0,0,-1,1,-1,0,0,0
+TIPS,0.004,SELL,-3,37.5,1,4,48.15,-89.13,-89.13,-89.13,870.9,12-1mo return: -97.6% | RSI=85.4 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+HYG,80.5275,NEUTRAL,1,12.5,3,2,-0.15,6.4,6.4,6.4,6.1,Price > SMA50 > SMA200 (uptrend) | RSI=82.0 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+BND,73.985,NEUTRAL,1,12.5,3,2,-0.1,5.0,5.0,5.0,4.3,Price > SMA50 > SMA200 (uptrend) | RSI=71.4 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+AGG,99.7793,NEUTRAL,1,12.5,3,2,-0.07,5.14,5.14,5.14,4.3,Price > SMA50 > SMA200 (uptrend) | RSI=71.4 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+LQD,109.935,NEUTRAL,1,12.5,3,2,-0.1,5.7,5.7,5.7,6.4,Price > SMA50 > SMA200 (uptrend) | RSI=74.1 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+EMB,96.5,NEUTRAL,1,12.5,3,2,-0.18,10.54,10.54,10.54,9.2,Price > SMA50 > SMA200 (uptrend) | RSI=86.4 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+GLD,440.84,NEUTRAL,0,0.0,2,2,-1.14,41.32,41.32,41.32,30.7,12-1mo return: +36.7% | RSI=68.3 (bearish zone) | MACD line above signal,0,1,-1,1,-1,0,0,0
+PDBC,17.155,WEAK BUY,2,25.0,3,1,1.87,29.04,29.04,29.04,28.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +29.5% | RSI=44.3 (bullish zone),1,1,1,-1,0,0,0,0
+WEAT,22.87,NEUTRAL,0,0.0,1,1,1.78,-1.85,-1.85,-1.85,22.2,Price > SMA50 > SMA200 (uptrend) | MACD line below signal,1,0,0,-1,0,0,0,0
+SLV,72.28,NEUTRAL,1,12.5,3,2,-1.83,114.23,114.23,114.23,49.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +94.7% | RSI=72.3 (overbought),1,1,-1,1,-1,0,0,0
+SOYB,24.54,NEUTRAL,-1,12.5,2,3,0.08,8.78,8.78,8.78,8.8,Price > SMA50 > SMA200 (uptrend) | RSI=63.5 (bearish zone) | MACD line below signal,1,0,-1,-1,-1,0,0,1
+USO,121.87,WEAK BUY,2,25.0,3,1,5.02,48.08,48.08,48.08,82.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +42.6% | RSI=44.1 (bullish zone),1,1,1,-1,0,0,0,0
+DBC,28.795,NEUTRAL,1,12.5,2,1,1.79,28.96,28.96,28.96,27.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +29.2% | MACD line below signal,1,1,0,-1,0,0,0,0
+EFA,103.735,WEAK BUY,2,25.0,4,2,-0.56,21.45,21.45,21.45,23.0,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +13.0% | RSI=84.3 (overbought),1,1,-1,1,-1,0,0,1
+CORN,18.1164,WEAK BUY,2,25.0,3,1,0.93,-0.62,-0.62,-0.62,14.3,Price > SMA50 > SMA200 (uptrend) | RSI=44.6 (bullish zone) | MACD line below signal,1,0,1,-1,0,0,0,1
+UNG,10.9872,WEAK SELL,-2,25.0,1,3,1.36,-37.5,-37.5,-37.5,36.3,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -28.6% | RSI=33.1 (bullish zone),-1,-1,1,-1,0,0,0,0
+EEM,63.055,NEUTRAL,1,12.5,3,2,-0.92,37.22,37.22,37.22,31.2,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +25.4% | RSI=87.2 (overbought),1,1,-1,1,-1,0,0,0
+VEA,69.16,WEAK BUY,2,25.0,4,2,-0.67,28.01,28.01,28.01,24.6,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +18.5% | RSI=85.0 (overbought),1,1,-1,1,-1,0,0,1
+EWJ,89.25,NEUTRAL,1,12.5,3,2,-1.04,28.1,28.1,28.1,28.7,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +20.7% | RSI=75.2 (overbought),1,1,-1,1,-1,0,0,0
+IEMG,77.395,WEAK BUY,2,25.0,4,2,-0.9,35.97,35.97,35.97,30.9,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +24.3% | RSI=87.7 (overbought),1,1,-1,1,-1,0,0,1
+EWA,30.03,WEAK BUY,2,25.0,4,2,-0.6,18.52,18.52,18.52,22.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +11.5% | RSI=87.0 (overbought),1,1,-1,1,-1,0,0,1
+FXI,37.575,NEUTRAL,-1,12.5,1,2,-0.07,4.81,4.81,4.81,19.2,RSI=84.9 (overbought) | MACD line above signal | Near upper band (BB%=0.95),0,0,-1,1,-1,0,0,0
+EWZ,41.36,WEAK BUY,2,25.0,4,2,0.49,52.29,52.29,52.29,28.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +34.4% | RSI=88.3 (overbought),1,1,-1,1,-1,0,0,1
+EWT,83.33,NEUTRAL,1,12.5,3,2,0.13,56.62,56.62,56.62,33.4,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +35.6% | RSI=94.2 (overbought),1,1,-1,1,-1,0,0,0
+EWS,29.365,WEAK BUY,2,25.0,4,2,-0.15,18.0,18.0,18.0,16.4,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +13.5% | RSI=78.3 (overbought),1,1,-1,1,-1,0,0,1
+EWH,23.48,BUY,3,37.5,4,1,0.04,24.98,24.98,24.98,19.1,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +21.5% | RSI=71.2 (overbought),1,1,-1,1,0,0,0,1
+EWC,58.695,WEAK BUY,2,25.0,4,2,0.3,30.29,30.29,30.29,14.6,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +20.1% | RSI=95.7 (overbought),1,1,-1,1,-1,0,0,1
+KWEB,30.21,SELL,-3,37.5,1,4,-0.79,-6.78,-6.78,-6.78,26.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -10.2% | RSI=76.7 (overbought),-1,-1,-1,1,-1,0,0,0
+EWG,42.86,NEUTRAL,-1,12.5,1,2,-0.76,6.09,6.09,6.09,25.2,RSI=86.0 (overbought) | MACD line above signal | Near upper band (BB%=0.85),0,0,-1,1,-1,0,0,0
+EWU,47.975,WEAK BUY,2,25.0,4,2,-0.57,24.75,24.75,24.75,19.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +17.3% | RSI=82.6 (overbought),1,1,-1,1,-1,0,0,1
+EWY,149.68,NEUTRAL,1,12.5,3,2,-1.74,129.69,129.69,129.69,61.2,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +106.9% | RSI=82.3 (overbought),1,1,-1,1,-1,0,0,0
+EWP,57.88,WEAK BUY,2,25.0,4,2,-0.87,38.28,38.28,38.28,24.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +27.3% | RSI=83.9 (overbought),1,1,-1,1,-1,0,0,1
+VXX,29.465,WEAK SELL,-2,25.0,2,4,1.67,-45.66,-45.66,-45.66,68.3,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -37.7% | RSI=15.2 (oversold),-1,-1,1,-1,1,0,0,-1
+EWQ,46.375,NEUTRAL,1,12.5,3,2,-0.82,11.67,11.67,11.67,24.1,Price > SMA50 > SMA200 (uptrend) | RSI=83.5 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+EWL,62.315,NEUTRAL,1,12.5,3,2,-0.2,16.65,16.65,16.65,19.5,Price > SMA50 > SMA200 (uptrend) | RSI=77.9 (overbought) | MACD line above signal,1,0,-1,1,-1,0,0,1
+EWI,58.485,WEAK BUY,2,25.0,4,2,-0.4,28.08,28.08,28.08,23.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +14.9% | RSI=91.5 (overbought),1,1,-1,1,-1,0,0,1
+SPXU,44.042,NEUTRAL,0,0.0,3,3,1.11,-38.53,-38.53,-38.53,54.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -23.1% | RSI=3.4 (oversold),-1,-1,1,-1,1,0,1,0
+SQQQ,57.4401,NEUTRAL,-1,12.5,3,4,1.86,-45.78,-45.78,-45.78,67.2,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -28.9% | RSI=3.1 (oversold),-1,-1,1,-1,1,0,1,-1
+TQQQ,57.515,NEUTRAL,-1,12.5,2,3,-1.83,57.47,57.47,57.47,66.9,12-1mo return: +24.9% | RSI=95.1 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+UPRO,123.93,NEUTRAL,0,0.0,3,3,-1.04,51.53,51.53,51.53,54.0,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +24.0% | RSI=95.7 (overbought),1,1,-1,1,-1,0,-1,0
+SOXL,94.0099,NEUTRAL,0,0.0,3,3,-0.71,340.4,340.4,340.4,126.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +157.0% | RSI=98.8 (overbought),1,1,-1,1,-1,0,-1,0
+UVXY,39.09,WEAK SELL,-2,25.0,2,4,2.46,-65.3,-65.3,-65.3,105.6,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -56.5% | RSI=14.6 (oversold),-1,-1,1,-1,1,0,0,-1
+SOXS,19.015,NEUTRAL,-1,12.5,3,4,0.77,-89.55,-89.55,-89.55,127.7,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -79.2% | RSI=0.5 (oversold),-1,-1,1,-1,1,0,1,-1
+ARKQ,129.41,NEUTRAL,1,12.5,3,2,-0.32,56.35,56.35,56.35,38.7,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +43.7% | RSI=90.7 (overbought),1,1,-1,1,-1,0,0,0
+ARKW,138.42,WEAK SELL,-2,25.0,1,3,-0.5,4.68,4.68,4.68,39.4,RSI=89.7 (overbought) | MACD line above signal | Near upper band (BB%=0.94),0,0,-1,1,-1,0,-1,0
+ARKG,31.32,NEUTRAL,-1,12.5,2,3,1.72,32.32,32.32,32.32,44.5,12-1mo return: +12.8% | RSI=84.7 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+ARKK,78.755,NEUTRAL,-1,12.5,2,3,-0.6,23.23,23.23,23.23,43.2,12-1mo return: +11.2% | RSI=89.3 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+ARKF,43.37,SELL,-3,37.5,1,4,-0.46,-4.05,-4.05,-4.05,40.7,12-1mo return: -11.0% | RSI=86.9 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+TAN,55.53,NEUTRAL,1,12.5,2,1,0.73,72.78,72.78,72.78,34.5,12-1mo return: +77.2% | RSI=60.9 (bearish zone) | MACD line above signal,0,1,-1,1,0,0,0,0
+QCLN,54.3,NEUTRAL,1,12.5,3,2,1.06,72.68,72.68,72.68,41.7,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +52.2% | RSI=94.3 (overbought),1,1,-1,1,-1,0,0,0
+ICLN,19.5499,NEUTRAL,1,12.5,3,2,0.77,54.77,54.77,54.77,33.4,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +48.4% | RSI=77.7 (overbought),1,1,-1,1,-1,0,0,0
+ROBO,79.32,NEUTRAL,1,12.5,3,2,-0.05,40.48,40.48,40.48,36.0,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +25.1% | RSI=90.0 (overbought),1,1,-1,1,-1,0,0,0
+BOTZ,37.4202,NEUTRAL,1,12.5,3,2,0.03,22.36,22.36,22.36,32.6,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +14.1% | RSI=87.3 (overbought),1,1,-1,1,-1,0,0,0
+CIBR,66.7599,SELL,-3,37.5,1,4,0.42,-8.34,-8.34,-8.34,36.3,12-1mo return: -10.6% | RSI=67.9 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+BUG,26.49,SELL,-3,37.5,1,4,1.3,-26.86,-26.86,-26.86,46.5,12-1mo return: -27.5% | RSI=63.5 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+BNB-USD,628.19,WEAK SELL,-2,25.0,1,3,1.89,-3.1,-3.1,-3.1,34.2,12-1mo return: -26.9% | RSI=59.1 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+AIQ,53.635,NEUTRAL,1,12.5,3,2,-0.86,28.17,28.17,28.17,30.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +16.6% | RSI=92.5 (overbought),1,1,-1,1,-1,0,0,0
+HACK,78.655,WEAK SELL,-2,25.0,1,3,0.11,-5.99,-5.99,-5.99,42.8,RSI=63.5 (bearish zone) | MACD line above signal | Near upper band (BB%=0.80),0,0,-1,1,-1,0,-1,0
+SOL-USD,85.82,SELL,-3,37.5,1,4,2.68,-43.84,-43.84,-43.84,51.8,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -57.0% | RSI=58.0 (bearish zone),-1,-1,-1,1,-1,0,0,0
+BTC-USD,75736.8281,WEAK SELL,-2,25.0,1,3,2.55,-28.25,-28.25,-28.25,34.6,12-1mo return: -44.5% | RSI=67.0 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+ADA-USD,0.2475,NEUTRAL,-1,12.5,1,2,2.05,-60.95,-60.95,-60.95,56.7,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -71.1% | MACD line above signal,-1,-1,0,1,0,0,0,0
+ETH-USD,2312.6899,WEAK SELL,-2,25.0,1,3,2.11,-9.19,-9.19,-9.19,51.2,12-1mo return: -55.9% | RSI=61.1 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+XRP-USD,1.4331,WEAK SELL,-2,25.0,1,3,2.76,-33.87,-33.87,-33.87,37.3,12-1mo return: -59.5% | RSI=62.5 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+AVAX-USD,9.22,WEAK SELL,-2,25.0,1,3,2.33,-51.77,-51.77,-51.77,54.4,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -64.4% | MACD line above signal,-1,-1,0,1,0,0,0,-1
+DOGE-USD,0.0948,NEUTRAL,-1,12.5,1,2,1.82,-46.06,-46.06,-46.06,39.3,12-1mo return: -61.5% | RSI=56.8 (bearish zone) | MACD line above signal,0,-1,-1,1,0,0,0,0
+LINK-USD,9.259,WEAK SELL,-2,25.0,1,3,2.08,-30.37,-30.37,-30.37,50.3,12-1mo return: -63.4% | RSI=55.9 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+DOT-USD,1.27,WEAK SELL,-2,25.0,1,3,2.39,-66.77,-66.77,-66.77,64.5,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -70.1% | MACD line above signal,-1,-1,0,1,0,0,0,-1
+LTC-USD,55.15,WEAK SELL,-2,25.0,1,3,1.99,-36.12,-36.12,-36.12,30.4,12-1mo return: -59.2% | RSI=56.1 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+UNI7083-USD,3.232,WEAK SELL,-2,25.0,1,3,0.0,-54.97,-54.97,-54.97,68.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -70.0% | MACD line above signal,-1,-1,0,1,0,0,0,-1
+BABA,139.52,WEAK SELL,-2,25.0,1,3,-1.06,21.29,21.29,21.29,36.4,RSI=76.4 (overbought) | MACD line above signal | Near upper band (BB%=0.98),0,0,-1,1,-1,0,-1,0
+PDD,103.95,NEUTRAL,-1,12.5,1,2,-0.8,1.38,1.38,1.38,32.5,RSI=63.8 (bearish zone) | MACD line above signal | Near upper band (BB%=0.83),0,0,-1,1,-1,0,0,0
+XPEV,17.605,NEUTRAL,-1,12.5,1,2,-2.73,-5.2,-5.2,-5.2,48.7,Price < SMA50 < SMA200 (downtrend) | RSI=59.7 (bearish zone) | MACD line above signal,-1,0,-1,1,0,0,0,0
+BIDU,126.2123,NEUTRAL,1,12.5,3,2,0.07,46.74,46.74,46.74,43.6,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +38.4% | RSI=79.4 (overbought),1,1,-1,1,-1,0,0,0
+ATOM-USD,1.801,WEAK SELL,-2,25.0,1,3,2.44,-56.0,-56.0,-56.0,35.9,12-1mo return: -64.6% | RSI=59.2 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+NIO,6.7,NEUTRAL,0,0.0,2,2,-1.9,94.77,94.77,94.77,66.1,12-1mo return: +71.2% | RSI=71.0 (overbought) | MACD line above signal,0,1,-1,1,-1,0,0,0
+JD,31.335,WEAK SELL,-2,25.0,1,3,-0.84,-2.16,-2.16,-2.16,44.4,12-1mo return: -15.5% | RSI=76.3 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+LI,18.705,WEAK SELL,-2,25.0,1,3,1.71,-30.57,-30.57,-30.57,34.3,12-1mo return: -36.5% | RSI=63.4 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+FIL-USD,0.922,NEUTRAL,-1,12.5,1,2,1.67,-61.91,-61.91,-61.91,63.4,12-1mo return: -69.0% | RSI=56.4 (bearish zone) | MACD line above signal,0,-1,-1,1,0,0,0,0
+TCOM,54.815,WEAK SELL,-2,25.0,1,3,-0.68,-9.65,-9.65,-9.65,24.9,12-1mo return: -14.7% | RSI=84.1 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+QFIN,14.025,SELL,-3,37.5,1,4,-0.74,-66.26,-66.26,-66.26,39.8,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -68.6% | RSI=71.9 (overbought),-1,-1,-1,1,-1,0,0,0
+TME,10.135,SELL,-3,37.5,1,4,0.55,-42.82,-42.82,-42.82,29.3,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -43.5% | RSI=76.7 (overbought),-1,-1,-1,1,-1,0,0,0
+MNSO,15.73,NEUTRAL,1,12.5,2,1,-1.87,-12.02,-12.02,-12.02,37.1,Price < SMA50 < SMA200 (downtrend) | MACD line above signal | Near lower band (BB%=0.21),-1,0,0,1,1,0,0,0
+EDU,57.85,NEUTRAL,1,12.5,3,2,-2.33,22.05,22.05,22.05,29.8,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +20.0% | RSI=64.1 (bearish zone),1,1,-1,1,-1,0,0,0
+FUTU,164.85,NEUTRAL,0,0.0,2,2,-1.25,37.64,37.64,37.64,49.3,12-1mo return: +14.6% | RSI=89.4 (overbought) | MACD line above signal,0,1,-1,1,-1,0,0,0
+WB,8.795,WEAK SELL,-2,25.0,1,3,-0.51,-2.03,-2.03,-2.03,18.2,Price < SMA50 < SMA200 (downtrend) | RSI=78.7 (overbought) | MACD line above signal,-1,0,-1,1,-1,0,0,0
+TAL,12.28,NEUTRAL,-1,12.5,2,3,-2.85,18.19,18.19,18.19,39.4,Price > SMA50 > SMA200 (uptrend) | RSI=68.4 (bearish zone) | MACD line above signal,1,0,-1,1,-1,0,-1,0
+GDS,45.0,NEUTRAL,1,12.5,3,2,0.67,65.32,65.32,65.32,51.2,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +63.7% | RSI=71.9 (overbought),1,1,-1,1,-1,0,0,0
+YUMC,48.67,BUY,3,37.5,3,0,0.25,14.0,14.0,14.0,22.1,12-1mo return: +25.8% | MACD line above signal | Near lower band (BB%=0.31),0,1,0,1,1,0,0,0
+BILI,24.985,NEUTRAL,-1,12.5,2,3,-0.66,21.29,21.29,21.29,39.5,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: +22.0% | RSI=81.3 (overbought),-1,1,-1,1,-1,0,0,0
+TM,214.78,NEUTRAL,-1,12.5,2,3,-1.11,23.47,23.47,23.47,28.6,12-1mo return: +20.1% | RSI=65.6 (bearish zone) | MACD line above signal,0,1,-1,1,-1,-1,0,0
+ATHM,18.815,SELL,-3,37.5,1,4,0.51,-26.79,-26.79,-26.79,26.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -28.4% | RSI=82.9 (overbought),-1,-1,-1,1,-1,0,0,0
+HMC,25.355,SELL,-3,37.5,1,4,1.42,-13.64,-13.64,-13.64,27.5,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -16.2% | RSI=69.6 (bearish zone),-1,-1,-1,1,-1,0,0,0
+SE,89.67,SELL,-3,37.5,1,4,-1.82,-42.98,-42.98,-42.98,42.1,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -48.5% | RSI=79.2 (overbought),-1,-1,-1,1,-1,0,0,0
+GRAB,4.2401,WEAK SELL,-2,25.0,1,3,0.71,-11.66,-11.66,-11.66,35.5,12-1mo return: -23.3% | RSI=86.6 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+HDB,26.45,WEAK SELL,-2,25.0,1,3,-3.85,-27.6,-27.6,-27.6,41.3,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -28.5% | RSI=66.5 (bearish zone),-1,-1,-1,1,0,0,0,0
+INFY,14.205,WEAK SELL,-2,25.0,1,3,-1.76,-22.77,-22.77,-22.77,34.8,12-1mo return: -29.1% | RSI=63.9 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+MANU,17.76,NEUTRAL,0,0.0,2,2,1.14,2.48,2.48,2.48,23.0,Price > SMA50 > SMA200 (uptrend) | RSI=69.4 (bearish zone) | MACD line above signal,1,0,-1,1,-1,0,0,0
+SONY,21.49,SELL,-3,37.5,1,4,-0.97,-16.25,-16.25,-16.25,24.9,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -19.6% | RSI=71.5 (overbought),-1,-1,-1,1,-1,0,0,0
+WIT,2.14,WEAK SELL,-2,25.0,1,3,-2.28,-27.71,-27.71,-27.71,35.7,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -26.0% | RSI=55.4 (bearish zone),-1,-1,-1,1,0,0,0,0
+SHOP,133.05,NEUTRAL,-1,12.5,2,3,1.45,24.89,24.89,24.89,55.5,12-1mo return: +14.9% | RSI=73.6 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+SAP,177.34,SELL,-4,50.0,1,5,-2.14,-39.4,-39.4,-39.4,33.6,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -36.8% | RSI=62.0 (bearish zone),-1,-1,-1,1,-1,0,-1,0
+RIO,100.17,NEUTRAL,1,12.5,3,2,0.02,85.0,85.0,85.0,27.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +58.2% | RSI=83.6 (overbought),1,1,-1,1,-1,0,0,0
+BP,45.195,BUY,3,37.5,4,1,1.36,49.13,49.13,49.13,35.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +51.3% | RSI=39.3 (bullish zone),1,1,1,-1,1,0,0,0
+HSBC,91.59,NEUTRAL,1,12.5,3,2,-0.62,63.28,63.28,63.28,32.7,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +41.7% | RSI=85.6 (overbought),1,1,-1,1,-1,0,0,0
+ASML,1464.8,NEUTRAL,1,12.5,3,2,0.34,93.86,93.86,93.86,55.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +80.8% | RSI=69.6 (bearish zone),1,1,-1,1,-1,0,0,0
+NVO,40.72,WEAK SELL,-2,25.0,1,3,0.49,-42.58,-42.58,-42.58,25.6,12-1mo return: -49.6% | RSI=85.0 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+MDB,262.81,SELL,-3,37.5,2,5,-0.22,27.83,27.83,27.83,58.8,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: +31.4% | RSI=65.0 (bearish zone),-1,1,-1,1,-1,0,-1,-1
+STNE,15.08,NEUTRAL,-1,12.5,1,2,-0.13,0.67,0.67,0.67,42.2,RSI=68.6 (bearish zone) | MACD line above signal | Near upper band (BB%=0.88),0,0,-1,1,-1,0,0,0
+MELI,1850.3051,WEAK SELL,-2,25.0,1,3,-0.3,-22.56,-22.56,-22.56,35.4,12-1mo return: -30.2% | RSI=77.6 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+LTM,55.06,NEUTRAL,1,12.5,3,2,-1.08,47.77,47.77,47.77,56.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +32.3% | RSI=72.8 (overbought),1,1,-1,1,-1,0,0,0
+UL,58.16,NEUTRAL,1,12.5,2,1,-0.63,-14.9,-14.9,-14.9,29.0,Price < SMA50 < SMA200 (downtrend) | RSI=42.1 (bullish zone) | MACD line above signal,-1,0,1,1,0,0,0,0
+NU,15.135,NEUTRAL,-1,12.5,2,3,-1.34,25.08,25.08,25.08,39.7,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: +17.0% | RSI=76.6 (overbought),-1,1,-1,1,-1,0,0,0
+DEO,82.315,SELL,-3,37.5,1,4,0.53,-16.57,-16.57,-16.57,27.4,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -25.1% | RSI=77.2 (overbought),-1,-1,-1,1,-1,0,0,0
+COIN,206.6351,SELL,-3,37.5,1,4,0.15,-18.6,-18.6,-18.6,68.8,12-1mo return: -20.1% | RSI=84.3 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+PBR,20.8,NEUTRAL,1,12.5,2,1,1.71,62.4,62.4,62.4,45.3,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +54.4% | MACD line below signal,1,1,0,-1,0,0,0,0
+PLTR,144.34,NEUTRAL,0,0.0,2,2,-1.4,4.44,4.44,4.44,62.5,12-1mo return: +12.6% | RSI=56.1 (bearish zone) | MACD line above signal,0,1,-1,1,0,0,-1,0
+VALE,17.885,NEUTRAL,1,12.5,3,2,0.59,108.36,108.36,108.36,29.4,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +70.4% | RSI=89.1 (overbought),1,1,-1,1,-1,0,0,0
+HOOD,90.2106,WEAK SELL,-2,25.0,1,3,-0.59,20.36,20.36,20.36,71.0,RSI=85.8 (overbought) | MACD line above signal | Above upper band (BB%=1.00),0,0,-1,1,-1,0,-1,0
+SQM,89.29,NEUTRAL,1,12.5,3,2,0.55,177.64,177.64,177.64,62.6,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +132.2% | RSI=62.3 (bearish zone),1,1,-1,1,-1,0,0,0
+ARM,171.59,SELL,-3,37.5,1,4,2.91,18.57,18.57,18.57,83.8,12-1mo return: -10.3% | RSI=77.7 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+RIVN,16.87,NEUTRAL,0,0.0,3,3,-2.09,25.99,25.99,25.99,43.5,Price > SMA50 > SMA200 (uptrend) | 12-1mo return: +20.4% | RSI=75.1 (overbought),1,1,-1,1,-1,0,-1,0
+MSTR,165.4184,SELL,-3,37.5,1,4,-0.66,-55.91,-55.91,-55.91,65.8,12-1mo return: -63.2% | RSI=84.1 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+RBLX,61.62,SELL,-3,37.5,1,4,2.12,-39.06,-39.06,-39.06,53.5,12-1mo return: -43.1% | RSI=73.8 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+LCID,6.895,NEUTRAL,-1,12.5,3,4,-5.55,-67.93,-67.93,-67.93,70.1,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -52.1% | RSI=28.3 (oversold),-1,-1,1,-1,1,0,1,-1
+APP,479.8667,NEUTRAL,0,0.0,2,2,0.56,33.13,33.13,33.13,74.2,12-1mo return: +22.0% | RSI=77.2 (overbought) | MACD line above signal,0,1,-1,1,-1,0,0,0
+SMCI,28.5399,WEAK SELL,-2,25.0,1,3,-0.07,-33.8,-33.8,-33.8,69.4,12-1mo return: -28.6% | RSI=85.0 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+SNOW,149.07,SELL,-3,37.5,1,4,3.54,-28.83,-28.83,-28.83,81.1,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -16.3% | MACD line above signal,-1,-1,0,1,0,0,-1,-1
+AFRM,65.58,SELL,-3,37.5,1,4,1.67,9.48,9.48,9.48,60.1,12-1mo return: -25.8% | RSI=90.6 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+SOFI,19.375,NEUTRAL,-1,12.5,2,3,-0.28,34.27,34.27,34.27,45.8,12-1mo return: +18.4% | RSI=87.1 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+U,26.03,SELL,-3,37.5,1,4,0.42,10.53,10.53,10.53,69.6,12-1mo return: -18.7% | RSI=82.8 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+PATH,10.555,NEUTRAL,-1,12.5,1,2,1.39,-15.02,-15.02,-15.02,60.7,Price < SMA50 < SMA200 (downtrend) | MACD line above signal | High ATR 5.55% — chaotic downtrend,-1,0,0,1,0,0,0,-1
+ZS,133.9,SELL,-3,37.5,1,4,-0.58,-56.43,-56.43,-56.43,67.3,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -49.4% | MACD line above signal,-1,-1,0,1,0,0,-1,-1
+UPST,34.165,SELL,-3,37.5,1,4,-1.17,-36.02,-36.02,-36.02,69.1,12-1mo return: -49.9% | RSI=88.0 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+PENN,15.86,WEAK SELL,-2,25.0,1,3,0.06,-3.7,-3.7,-3.7,44.5,12-1mo return: -14.0% | RSI=73.3 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+GTLB,21.43,SELL,-3,37.5,1,4,0.05,-48.82,-48.82,-48.82,65.1,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -45.3% | MACD line above signal,-1,-1,0,1,0,0,-1,-1
+DKNG,22.94,WEAK SELL,-2,25.0,1,3,0.53,-39.82,-39.82,-39.82,54.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -34.7% | RSI=62.9 (bearish zone),-1,-1,-1,1,0,0,0,0
+DDOG,127.89,WEAK SELL,-2,25.0,1,3,1.01,2.44,2.44,2.44,62.3,RSI=64.3 (bearish zone) | MACD line above signal | Near upper band (BB%=0.86),0,0,-1,1,-1,0,-1,0
+PANW,168.385,WEAK SELL,-2,25.0,1,3,0.32,-16.66,-16.66,-16.66,54.2,12-1mo return: -16.0% | RSI=62.9 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+NET,203.32,NEUTRAL,0,0.0,1,1,1.16,12.19,12.19,12.19,85.3,12-1mo return: +22.1% | MACD line below signal,0,1,0,-1,0,0,0,0
+CFLT,30.99,NEUTRAL,0,0.0,3,3,0.0,29.18,29.18,29.18,4.1,vs SMA50 | 12-1mo return: +27.4% | RSI=78.7 (overbought),1,1,-1,-1,-1,0,0,1
+CRWD,427.265,SELL,-3,37.5,1,4,0.78,-13.16,-13.16,-13.16,57.2,12-1mo return: -13.0% | RSI=65.7 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+OPEN,5.305,NEUTRAL,0,0.0,2,2,0.28,835.63,835.63,835.63,70.7,12-1mo return: +806.5% | RSI=70.5 (overbought) | MACD line above signal,0,1,-1,1,-1,0,0,0
+ESTC,48.165,SELL,-3,37.5,1,4,1.27,-42.7,-42.7,-42.7,52.7,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -34.4% | MACD line above signal,-1,-1,0,1,0,0,-1,-1
+HUBS,225.45,WEAK SELL,-2,25.0,2,4,1.33,-59.37,-59.37,-59.37,70.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -52.7% | RSI=43.6 (bullish zone),-1,-1,1,1,0,0,-1,-1
+DOCU,46.575,NEUTRAL,0,0.0,1,1,1.83,-37.74,-37.74,-37.74,49.6,12-1mo return: -36.2% | MACD bullish crossover,0,-1,0,1,0,0,0,0
+ZM,89.69,NEUTRAL,0,0.0,2,2,1.9,15.13,15.13,15.13,45.5,Price > SMA50 > SMA200 (uptrend) | RSI=69.9 (bearish zone) | MACD line above signal,1,0,-1,1,-1,0,0,0
+BILL,39.24,SELL,-3,37.5,1,4,1.11,-6.21,-6.21,-6.21,47.9,Price < SMA50 < SMA200 (downtrend) | RSI=58.3 (bearish zone) | MACD line above signal,-1,0,-1,1,-1,0,-1,0
+TEAM,70.295,SELL,-4,50.0,1,5,5.01,-64.53,-64.53,-64.53,75.4,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -62.4% | MACD line above signal,-1,-1,0,1,-1,0,-1,-1
+RGTI,19.5201,NEUTRAL,-1,12.5,2,3,-1.46,70.04,70.04,70.04,88.3,12-1mo return: +34.2% | RSI=85.1 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+IONQ,47.13,WEAK SELL,-2,25.0,1,3,2.26,23.9,23.9,23.9,119.3,12-1mo return: -16.1% | RSI=89.4 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+OKTA,75.12,SELL,-3,37.5,1,4,3.97,-23.87,-23.87,-23.87,76.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -18.2% | MACD bullish crossover,-1,-1,0,1,0,0,-1,-1
+QBTS,21.6,WEAK SELL,-2,25.0,1,3,-0.41,38.91,38.91,38.91,123.1,RSI=83.6 (overbought) | MACD line above signal | Near upper band (BB%=0.98),0,0,-1,1,-1,0,-1,0
+QUBT,9.85,WEAK SELL,-2,25.0,1,3,2.93,-50.23,-50.23,-50.23,87.0,12-1mo return: -63.7% | RSI=89.7 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+JOBY,9.08,WEAK SELL,-2,25.0,2,4,-1.52,4.97,4.97,4.97,46.9,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: +12.0% | RSI=70.7 (overbought),-1,1,-1,1,-1,0,0,-1
+MQ,4.465,SELL,-3,37.5,1,4,1.71,-20.13,-20.13,-20.13,40.0,12-1mo return: -29.7% | RSI=68.2 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+ACHR,6.05,SELL,-5,62.5,1,6,-0.98,-39.01,-39.01,-39.01,58.7,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -39.4% | RSI=75.8 (overbought),-1,-1,-1,1,-1,0,-1,-1
+CHPT,6.48,WEAK SELL,-2,25.0,1,3,4.18,-52.63,-52.63,-52.63,80.6,12-1mo return: -60.5% | RSI=88.3 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+WBD,27.59,NEUTRAL,0,0.0,2,2,0.44,160.78,160.78,160.78,7.9,12-1mo return: +161.2% | RSI=65.4 (bearish zone) | MACD line above signal,0,1,-1,1,-1,0,0,0
+BLNK,0.7899,SELL,-3,37.5,1,4,13.49,-8.26,-8.26,-8.26,122.8,12-1mo return: -37.2% | RSI=88.7 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+NFLX,93.8974,NEUTRAL,0,0.0,2,2,-3.51,-23.08,-23.08,-23.08,46.4,12-1mo return: -24.8% | MACD bearish crossover | Near lower band (BB%=0.29),0,-1,0,-1,1,0,1,0
+ROKU,116.605,NEUTRAL,0,0.0,2,2,0.36,44.62,44.62,44.62,46.1,12-1mo return: +18.9% | RSI=96.9 (overbought) | MACD line above signal,0,1,-1,1,-1,0,0,0
+EVGO,2.175,SELL,-5,62.5,1,6,-1.58,-51.88,-51.88,-51.88,62.4,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -54.6% | RSI=77.2 (overbought),-1,-1,-1,1,-1,0,-1,-1
+SPOT,536.49,WEAK SELL,-2,25.0,1,3,-0.02,-25.62,-25.62,-25.62,37.5,12-1mo return: -33.1% | RSI=74.7 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+PERI,10.645,WEAK SELL,-2,25.0,1,3,0.33,10.08,10.08,10.08,34.9,RSI=72.6 (overbought) | MACD line above signal | Near upper band (BB%=0.98),0,0,-1,1,-1,0,-1,0
+TTD,22.905,SELL,-5,62.5,1,6,1.94,-66.14,-66.14,-66.14,55.0,Price < SMA50 < SMA200 (downtrend) | 12-1mo return: -65.2% | RSI=55.4 (bearish zone),-1,-1,-1,1,-1,0,-1,-1
+CRTO,19.48,SELL,-3,37.5,1,4,0.0,-17.04,-17.04,-17.04,28.5,12-1mo return: -25.6% | RSI=76.9 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+PUBM,9.81,WEAK SELL,-2,25.0,1,3,0.0,-11.62,-11.62,-11.62,38.8,12-1mo return: -27.3% | RSI=95.2 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+APPS,3.795,SELL,-3,37.5,1,4,1.2,-49.67,-49.67,-49.67,77.6,12-1mo return: -57.0% | RSI=74.5 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+MGNI,13.775,WEAK SELL,-2,25.0,1,3,0.47,-24.44,-24.44,-24.44,36.1,12-1mo return: -31.5% | RSI=83.6 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+UBER,76.37,WEAK SELL,-2,25.0,1,3,-0.97,-9.9,-9.9,-9.9,35.3,12-1mo return: -11.1% | RSI=72.0 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+ABNB,142.71,NEUTRAL,-1,12.5,2,3,0.82,7.0,7.0,7.0,38.9,Price > SMA50 > SMA200 (uptrend) | RSI=81.8 (overbought) | MACD line above signal,1,0,-1,1,-1,0,-1,0
+LYFT,14.38,WEAK SELL,-2,25.0,1,3,-3.81,-3.81,-3.81,-3.81,40.6,12-1mo return: -10.5% | RSI=71.7 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+BKNG,190.025,WEAK SELL,-2,25.0,1,3,-1.03,-9.85,-9.85,-9.85,39.1,12-1mo return: -18.5% | RSI=73.3 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+EXPE,271.44,NEUTRAL,-1,12.5,2,3,2.11,68.53,68.53,68.53,42.1,12-1mo return: +48.6% | RSI=75.2 (overbought) | MACD line above signal,0,1,-1,1,-1,0,-1,0
+DASH,187.7,SELL,-3,37.5,1,4,2.07,-14.44,-14.44,-14.44,50.9,12-1mo return: -27.4% | RSI=83.1 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0
+TRIP,11.38,WEAK SELL,-2,25.0,1,3,-0.09,-13.79,-13.79,-13.79,45.9,12-1mo return: -29.6% | RSI=67.4 (bearish zone) | MACD line above signal,0,-1,-1,1,-1,0,0,0
+YELP,28.09,SELL,-3,37.5,1,4,0.54,-20.67,-20.67,-20.67,22.2,12-1mo return: -31.1% | RSI=89.8 (overbought) | MACD line above signal,0,-1,-1,1,-1,0,-1,0

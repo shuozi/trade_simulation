@@ -1,0 +1,62 @@
+[
+  {
+    "id": 2,
+    "symbol": "ETH-USD",
+    "side": "BUY",
+    "date": "2026-03-18",
+    "price": 2321.9,
+    "quantity": 0.11018132,
+    "notes": "",
+    "logged_at": "2026-04-03T13:53:23.134758"
+  },
+  {
+    "id": 3,
+    "symbol": "BTC-USD",
+    "side": "BUY",
+    "date": "2026-02-06",
+    "price": 65827,
+    "quantity": 0.00744657,
+    "notes": "",
+    "logged_at": "2026-04-03T17:28:50.805008"
+  },
+  {
+    "id": 4,
+    "symbol": "SREN.SW",
+    "side": "BUY",
+    "date": "2025-12-08",
+    "price": 129.7,
+    "quantity": 7.7101,
+    "notes": "",
+    "logged_at": "2026-04-03T17:37:53.534401"
+  },
+  {
+    "id": 5,
+    "symbol": "ETH-USD",
+    "side": "BUY",
+    "date": "2026-02-06",
+    "price": 1933.7,
+    "quantity": 0.0353668,
+    "notes": "",
+    "logged_at": "2026-04-03T17:40:27.981253"
+  },
+  {
+    "id": 6,
+    "symbol": "ETH-USD",
+    "side": "BUY",
+    "date": "2026-04-02",
+    "price": 2052.5,
+    "quantity": 0.14616322,
+    "notes": "",
+    "logged_at": "2026-04-03T17:41:55.954895"
+  },
+  {
+    "id": 7,
+    "symbol": "SONVY",
+    "side": "BUY",
+    "date": "2026-04-20",
+    "price": 188.4,
+    "quantity": 29.6368,
+    "notes": "",
+    "logged_at": "2026-04-20T23:13:47.837948"
+  }
+]

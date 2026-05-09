@@ -82,6 +82,88 @@ def load_latest_csv() -> pd.DataFrame:
     return df
 
 
+_name_cache: dict = {}
+
+# ── Known ETF prefixes / crypto patterns ─────────────────────────────────
+_ETF_SUFFIXES = {"SPY","QQQ","IWM","DIA","GLD","SLV","TLT","HYG","LQD","VXX",
+                 "ARKK","ARKG","ARKF","ARKQ","ARKW","XLK","XLF","XLE","XLV",
+                 "XLI","XLP","XLU","XLY","XLB","XLRE","IAU","PPLT","PDBC",
+                 "VTI","VOO","VEA","VWO","IEFA","EEM","EFA","AGG","BND",
+                 "BNDX","EMB","SCHD","JEPI","QYLD","XYLD","RSP","MDY","IJR",
+                 "IVV","ITOT","ESGU","SCHF","SPDW","SPEM","SPIB","SPSB",
+                 "GOVT","SHY","IEF","VGIT","VCIT","VCSH","VMBS","MBB","MUB"}
+
+_CRYPTO_SUFFIXES = {"-USD","-BTC","-ETH","USDT","BUSD","BTC","ETH","BNB","SOL","ADA",
+                    "DOGE","DOT","AVAX","MATIC","LINK","UNI","ATOM","XRP","LTC","XLM"}
+
+
+def classify_asset(symbol: str) -> dict:
+    """Return {type, exchange} for a ticker symbol, derived from its format."""
+    s = symbol.upper()
+
+    # Crypto: ends with -USD, -BTC, -ETH, or known suffix
+    if any(s.endswith(sfx) for sfx in ["-USD","-BTC","-ETH","-USDT"]):
+        return {"type": "Crypto", "exchange": "Crypto"}
+    if s in {"BTC","ETH","BNB","SOL","ADA","DOGE","XRP","DOT","AVAX","MATIC","LINK"}:
+        return {"type": "Crypto", "exchange": "Crypto"}
+
+    # International exchanges by suffix
+    if "." in s:
+        sfx = s.split(".")[-1]
+        exch_map = {
+            "SW": ("Equity", "SIX (Switzerland)"),
+            "PA": ("Equity", "Euronext Paris"),
+            "L":  ("Equity", "London Stock Exchange"),
+            "DE": ("Equity", "XETRA (Germany)"),
+            "AS": ("Equity", "Euronext Amsterdam"),
+            "MC": ("Equity", "Bolsa Madrid"),
+            "MI": ("Equity", "Borsa Milano"),
+            "HK": ("Equity", "Hong Kong Stock Exchange"),
+            "T":  ("Equity", "Tokyo Stock Exchange"),
+            "SS": ("Equity", "Shanghai Stock Exchange"),
+            "SZ": ("Equity", "Shenzhen Stock Exchange"),
+            "AX": ("Equity", "ASX (Australia)"),
+            "TO": ("Equity", "Toronto Stock Exchange"),
+            "BR": ("Equity", "Euronext Brussels"),
+            "LS": ("Equity", "Euronext Lisbon"),
+            "F":  ("Equity", "Frankfurt Stock Exchange"),
+            "VI": ("Equity", "Vienna Stock Exchange"),
+            "ST": ("Equity", "Nasdaq Stockholm"),
+            "CO": ("Equity", "Nasdaq Copenhagen"),
+            "OL": ("Equity", "Oslo Stock Exchange"),
+            "HE": ("Equity", "Nasdaq Helsinki"),
+        }
+        if sfx in exch_map:
+            return {"type": exch_map[sfx][0], "exchange": exch_map[sfx][1]}
+
+    # ETFs
+    if s in _ETF_SUFFIXES or (len(s) >= 3 and s.endswith(("ETF","ETF2"))):
+        return {"type": "ETF", "exchange": "US Markets"}
+
+    # Futures / bonds / macro (common patterns)
+    if s.startswith("^") or s in {"GC=F","SI=F","CL=F","NG=F","ZC=F","ZW=F","ZS=F",
+                                   "ES=F","NQ=F","RTY=F","YM=F","GE=F","TN=F"}:
+        return {"type": "Futures/Index", "exchange": "US Markets"}
+
+    # Default: US Equity
+    return {"type": "Equity", "exchange": "US Markets (NYSE/NASDAQ)"}
+
+
+def get_asset_name(symbol: str) -> str:
+    """Return full company name for a ticker symbol, cached."""
+    if symbol in _name_cache:
+        return _name_cache[symbol]
+    try:
+        import yfinance as yf
+        info = yf.Ticker(symbol).info
+        name = info.get("longName") or info.get("shortName") or symbol
+        _name_cache[symbol] = name
+    except Exception:
+        name = symbol
+        _name_cache[symbol] = symbol
+    return name
+
+
 def fetch_price_history(symbol: str, days: int = 365) -> pd.DataFrame:
     """Download OHLCV for a single symbol."""
     try:
@@ -291,7 +373,17 @@ def make_table_data(df: pd.DataFrame, signal_filter: Optional[list] = None) -> p
     if signal_filter:
         sub = sub[sub["signal"].isin(signal_filter)]
 
-    display_cols = ["symbol", "price", "signal", "score", "confidence",
+    sub = sub.copy()
+    # Asset type + exchange classification (free, no network)
+    cls = sub["symbol"].apply(classify_asset)
+    sub["type"]     = cls.apply(lambda x: x["type"])
+    sub["exchange"] = cls.apply(lambda x: x["exchange"])
+    # Company name (network, top-50 only)
+    top_syms = sub["symbol"].head(50).tolist() if "symbol" in sub.columns else []
+    name_map = {s: get_asset_name(s) for s in top_syms}
+    sub["name"] = sub["symbol"].map(name_map).fillna(sub["symbol"])
+
+    display_cols = ["symbol", "name", "type", "exchange", "price", "signal", "score", "confidence",
                     "ret_1d", "ret_5d", "ret_1mo", "ret_3mo", "vol_ann", "reason"]
     # Fallback columns for backtest output
     if "ret_1d" not in sub.columns:
@@ -443,6 +535,100 @@ def create_app(initial_df: pd.DataFrame, debug: bool = False) -> dash.Dash:
 
             # Summary cards
             html.Div(id="summary-cards", className="my-3"),
+
+            # ── Filter bar ───────────────────────────────────────────────
+            dbc.Card(dbc.CardBody([
+                dbc.Row([
+                    dbc.Col([
+                        html.Label("Asset Type", className="text-muted",
+                                   style={"fontSize": "0.8rem", "marginBottom": "2px"}),
+                        dcc.Dropdown(
+                            id="filter-type",
+                            options=[
+                                {"label": "All Types",           "value": "all"},
+                                {"label": "Equity",              "value": "Equity"},
+                                {"label": "ETF",                 "value": "ETF"},
+                                {"label": "Crypto",              "value": "Crypto"},
+                                {"label": "Futures/Index",       "value": "Futures/Index"},
+                            ],
+                            value="all", clearable=False,
+                            style={"fontSize": "13px"},
+                        ),
+                    ], md=2),
+                    dbc.Col([
+                        html.Label("Exchange / Region", className="text-muted",
+                                   style={"fontSize": "0.8rem", "marginBottom": "2px"}),
+                        dcc.Dropdown(
+                            id="filter-exchange",
+                            options=[
+                                {"label": "All Exchanges",               "value": "all"},
+                                {"label": "US Markets (NYSE/NASDAQ)",    "value": "US Markets (NYSE/NASDAQ)"},
+                                {"label": "US Markets (ETFs)",           "value": "US Markets"},
+                                {"label": "Crypto",                      "value": "Crypto"},
+                                {"label": "SIX (Switzerland)",           "value": "SIX (Switzerland)"},
+                                {"label": "London Stock Exchange",       "value": "London Stock Exchange"},
+                                {"label": "XETRA (Germany)",             "value": "XETRA (Germany)"},
+                                {"label": "Euronext Paris",              "value": "Euronext Paris"},
+                                {"label": "Euronext Amsterdam",          "value": "Euronext Amsterdam"},
+                                {"label": "Tokyo Stock Exchange",        "value": "Tokyo Stock Exchange"},
+                                {"label": "Hong Kong Stock Exchange",    "value": "Hong Kong Stock Exchange"},
+                                {"label": "ASX (Australia)",             "value": "ASX (Australia)"},
+                                {"label": "Toronto Stock Exchange",      "value": "Toronto Stock Exchange"},
+                                {"label": "Shanghai/Shenzhen",           "value": "Shanghai"},
+                            ],
+                            value="all", clearable=False,
+                            style={"fontSize": "13px"},
+                        ),
+                    ], md=3),
+                    dbc.Col([
+                        html.Label("Signal Filter", className="text-muted",
+                                   style={"fontSize": "0.8rem", "marginBottom": "2px"}),
+                        dcc.Dropdown(
+                            id="filter-signal",
+                            options=[
+                                {"label": "All Signals",   "value": "all"},
+                                {"label": "BUY only",      "value": "BUY"},
+                                {"label": "WEAK BUY",      "value": "WEAK BUY"},
+                                {"label": "NEUTRAL",       "value": "NEUTRAL"},
+                                {"label": "WEAK SELL",     "value": "WEAK SELL"},
+                                {"label": "SELL only",     "value": "SELL"},
+                                {"label": "Any BUY",       "value": "any_buy"},
+                                {"label": "Any SELL",      "value": "any_sell"},
+                            ],
+                            value="all", clearable=False,
+                            style={"fontSize": "13px"},
+                        ),
+                    ], md=2),
+                    dbc.Col([
+                        html.Label("Min Score", className="text-muted",
+                                   style={"fontSize": "0.8rem", "marginBottom": "2px"}),
+                        dcc.Slider(
+                            id="filter-score",
+                            min=-8, max=8, step=1, value=-8,
+                            marks={i: str(i) for i in range(-8, 9, 2)},
+                            tooltip={"placement": "bottom", "always_visible": True},
+                        ),
+                    ], md=3),
+                    dbc.Col([
+                        html.Label("Max Vol %", className="text-muted",
+                                   style={"fontSize": "0.8rem", "marginBottom": "2px"}),
+                        dcc.Slider(
+                            id="filter-vol",
+                            min=0, max=200, step=10, value=200,
+                            marks={0:"0", 30:"30", 60:"60", 100:"100", 200:"200"},
+                            tooltip={"placement": "bottom", "always_visible": True},
+                        ),
+                    ], md=2),
+                ], className="g-2"),
+                dbc.Row([
+                    dbc.Col(html.Small(id="filter-count",
+                                       style={"color": "#aaa", "marginTop": "6px"}), md=12),
+                ]),
+            ]), style={"background": "#1e1e2e", "border": "1px solid #333",
+                       "borderRadius": "8px", "marginBottom": "16px"}),
+
+            # Filtered store
+            dcc.Store(id="store-filtered"),
 
             # Tabs
             dbc.Tabs([
@@ -596,6 +782,60 @@ def create_app(initial_df: pd.DataFrame, debug: bool = False) -> dash.Dash:
             return pd.DataFrame()
         return pd.DataFrame(data)
 
+    # ── Filter callback: raw data → filtered store ────────────────────────
+    @app.callback(
+        Output("store-filtered", "data"),
+        Output("filter-count",   "children"),
+        Input("store-data",      "data"),
+        Input("filter-type",     "value"),
+        Input("filter-exchange", "value"),
+        Input("filter-signal",   "value"),
+        Input("filter-score",    "value"),
+        Input("filter-vol",      "value"),
+    )
+    def apply_filters(data, ftype, fexchange, fsignal, fmin_score, fmax_vol):
+        df = _df_from_store(data)
+        if df.empty:
+            return [], "No data loaded."
+
+        # Classify each symbol
+        cls = df["symbol"].apply(classify_asset)
+        df  = df.copy()
+        df["_type"]     = cls.apply(lambda x: x["type"])
+        df["_exchange"] = cls.apply(lambda x: x["exchange"])
+
+        # Apply type filter
+        if ftype and ftype != "all":
+            df = df[df["_type"] == ftype]
+
+        # Apply exchange filter (partial match for Shanghai/Shenzhen)
+        if fexchange and fexchange != "all":
+            if fexchange == "Shanghai":
+                df = df[df["_exchange"].isin(["Shanghai Stock Exchange", "Shenzhen Stock Exchange"])]
+            else:
+                df = df[df["_exchange"] == fexchange]
+
+        # Apply signal filter
+        if fsignal and fsignal != "all":
+            if fsignal == "any_buy":
+                df = df[df["signal"].isin(["BUY", "WEAK BUY"])]
+            elif fsignal == "any_sell":
+                df = df[df["signal"].isin(["SELL", "WEAK SELL"])]
+            else:
+                df = df[df["signal"] == fsignal]
+
+        # Score filter
+        if "score" in df.columns and fmin_score is not None:
+            df = df[pd.to_numeric(df["score"], errors="coerce").fillna(0) >= fmin_score]
+
+        # Volatility filter
+        if "vol_ann" in df.columns and fmax_vol is not None and fmax_vol < 200:
+            df = df[pd.to_numeric(df["vol_ann"], errors="coerce").fillna(999) <= fmax_vol]
+
+        n_total = len(_df_from_store(data))
+        label   = f"Showing {len(df)} of {n_total} assets after filters"
+        return df.drop(columns=["_type","_exchange"]).to_dict("records"), label
+
     @app.callback(
         Output("summary-cards",      "children"),
         Output("graph-distribution", "figure"),
@@ -603,7 +843,7 @@ def create_app(initial_df: pd.DataFrame, debug: bool = False) -> dash.Dash:
         Output("graph-scatter-vol",  "figure"),
         Output("graph-pie",          "figure"),
         Output("graph-heatmap",      "figure"),
-        Input("store-data",          "data"),
+        Input("store-filtered",      "data"),
     )
     def update_overview(data):
         df = _df_from_store(data)
@@ -659,7 +899,7 @@ def create_app(initial_df: pd.DataFrame, debug: bool = False) -> dash.Dash:
         Output("table-sell-strong","children"),
         Output("table-sell-weak",  "children"),
         Output("table-raw",        "children"),
-        Input("store-data", "data"),
+        Input("store-filtered", "data"),
     )
     def update_tables(data):
         df = _df_from_store(data)
@@ -677,7 +917,7 @@ def create_app(initial_df: pd.DataFrame, debug: bool = False) -> dash.Dash:
         Output("detail-stats",         "children"),
         Input("btn-load-symbol",       "n_clicks"),
         State("input-symbol",          "value"),
-        State("store-data",            "data"),
+        State("store-filtered",        "data"),
         prevent_initial_call=False,
     )
     def update_detail(n_clicks, symbol, data):
@@ -730,9 +970,11 @@ def create_app(initial_df: pd.DataFrame, debug: bool = False) -> dash.Dash:
 
 def main():
     parser = argparse.ArgumentParser(description="Interactive trading dashboard")
-    parser.add_argument("--port",  type=int, default=8050, help="Local port (default 8050)")
-    parser.add_argument("--scan",  metavar="UNIVERSE",     help="Run a fresh scan before launching")
-    parser.add_argument("--debug", action="store_true",    help="Enable Dash debug mode")
+    parser.add_argument("--port",     type=int, default=8050, help="Local port (default 8050)")
+    parser.add_argument("--scan",     metavar="UNIVERSE",     help="Run a fresh scan before launching")
+    parser.add_argument("--debug",    action="store_true",    help="Enable Dash debug mode")
+    parser.add_argument("--password", type=str, default=None,
+                        help="Login password (or set DASHBOARD_PASSWORD env var)")
     args = parser.parse_args()
 
     # Optionally run a fresh scan first
@@ -753,6 +995,9 @@ def main():
         print(f"  Loaded {len(df)} assets.")
 
     app = create_app(df, debug=args.debug)
+
+    from auth import add_auth
+    add_auth(app, password=args.password, title="Trading Dashboard")
 
     url = f"http://localhost:{args.port}"
     print(f"\n{'═'*50}")

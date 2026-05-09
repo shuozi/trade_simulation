@@ -70,6 +70,22 @@ def next_id(trades: list[dict]) -> int:
 
 _price_cache: dict[str, float] = {}
 _history_cache: dict[str, pd.DataFrame] = {}
+_name_cache: dict = {}
+
+
+def get_asset_name(symbol: str) -> str:
+    """Return the full company/asset name for a ticker, cached."""
+    if symbol in _name_cache:
+        return _name_cache[symbol]
+    try:
+        import yfinance as yf
+        info = yf.Ticker(symbol).info
+        name = info.get("longName") or info.get("shortName") or symbol
+        _name_cache[symbol] = name
+    except Exception:
+        name = symbol
+        _name_cache[symbol] = symbol
+    return name
 
 
 def get_current_price(symbol: str) -> Optional[float]:
@@ -235,7 +251,7 @@ def compute_portfolio(trades: list[dict]) -> dict:
     if not trades:
         return {"open": {}, "closed": [], "equity": pd.Series(dtype=float),
                 "total_invested": 0, "total_value": 0,
-                "unrealized_pnl": 0, "realized_pnl": 0}
+                "unrealized_pnl": 0, "realized_pnl": 0, "total_pnl": 0}
 
     df = pd.DataFrame(trades)
     df["date"]     = pd.to_datetime(df["date"])
@@ -322,7 +338,8 @@ def compute_performance(pf: dict) -> dict:
     closed = pf.get("closed", [])
     if not closed:
         return {"sharpe": None, "win_rate": None, "avg_return": None,
-                "best_trade": None, "worst_trade": None, "avg_hold_days": None}
+                "best_trade": None, "worst_trade": None, "avg_hold_days": None,
+                "total_trades": 0}
     rets = [c["return_pct"] for c in closed]
     wins = sum(1 for r in rets if r > 0)
     r_arr = np.array(rets)
@@ -469,10 +486,164 @@ def build_signal_bars(sigs: dict, symbol: str) -> go.Figure:
         hovertemplate="%{y}: %{x:+d}<extra></extra>",
     ))
     fig.add_vline(x=0, line_color="white", line_width=0.5)
-    fig.update_layout(**_fig_base(f"{symbol} — Strategy Signals", height=300),
-                      xaxis=dict(tickvals=[-1, 0, 1], range=[-1.6, 2.4], gridcolor=BORDER),
-                      margin=dict(t=40, b=20, l=90, r=160))
+    base = _fig_base(f"{symbol} — Strategy Signals", height=300)
+    base["xaxis"] = dict(tickvals=[-1, 0, 1], range=[-1.6, 2.4], gridcolor=BORDER)
+    base["margin"] = dict(t=40, b=20, l=90, r=160)
+    fig.update_layout(**base)
     return fig
+
+
+def build_advisory(pos: dict, sigs: dict) -> html.Div:
+    """Trade advisory card for an open position."""
+    score   = sum(v for v, _ in sigs.values()) if sigs else 0
+    n       = len(sigs)
+    ret_pct = pos.get("return_pct", 0)
+
+    # ── Main action ──────────────────────────────────────────────────────
+    if not sigs:
+        action, rationale, ac = "INSUFFICIENT DATA", \
+            "Not enough price history to generate a signal. Check the ticker symbol.", "#555"
+    elif score >= 3:
+        action  = "INCREASE POSITION"
+        rationale = (f"{score}/{n} signals bullish. Strong trend alignment. "
+                     "Consider adding on the next 1–3 % pullback; use a 5–10 % stop below entry.")
+        ac = "#27ae60"
+    elif score == 2:
+        action  = "ADD ON PULLBACK"
+        rationale = (f"{score}/{n} signals bullish. Positive but not a unanimous setup. "
+                     "Wait for a small dip or confirm with one more signal before adding.")
+        ac = "#2ecc71"
+    elif score == 1:
+        action  = "HOLD — WEAK BUY"
+        rationale = (f"{score}/{n} signals bullish. Mild edge. Keep current size; "
+                     "add only if score reaches ≥+3. Tighten stop to protect capital.")
+        ac = "#a8e6cf"
+    elif score == 0:
+        action  = "HOLD — NEUTRAL"
+        rationale = (f"Signals mixed ({score}/{n}). No statistical edge right now. "
+                     "Maintain position; reassess in 5 days or when a clear catalyst emerges.")
+        ac = "#95a5a6"
+    elif score == -1:
+        action  = "HOLD — TIGHTEN STOP"
+        rationale = (f"{abs(score)}/{n} signals bearish. Weakness appearing. "
+                     "Raise stop-loss to break-even or recent swing low. "
+                     "Consider taking 25 % off if in profit.")
+        ac = "#f39c12"
+    elif score == -2:
+        action  = "REDUCE POSITION 30–50 %"
+        rationale = (f"{abs(score)}/{n} signals bearish. Momentum deteriorating. "
+                     "Sell half the position now; let the rest run with a tight stop.")
+        ac = "#e67e22"
+    else:
+        action  = "EXIT POSITION"
+        rationale = (f"Strong bearish consensus ({score}/{n}). "
+                     "The original trade thesis has likely broken down. Exit to preserve capital.")
+        ac = "#e74c3c"
+
+    # ── Per-signal criteria ───────────────────────────────────────────────
+    WHEN = {
+        "Trend": {
+         1:  "Price above SMA50 — uptrend intact. Hold. Exit if close below SMA50 for 2+ days.",
+         -1: "Price below SMA50 — downtrend. Reduce risk. Re-enter only after SMA50 recapture.",
+         0:  "Price at SMA50 — wait for decisive breakout. No action yet.",
+        },
+        "Momentum": {
+         1:  "12-month momentum positive — trend followers are buyers. Hold or add.",
+         -1: "12-month momentum negative — trend followers are sellers. Avoid adding.",
+         0:  "Momentum neutral — neither a tailwind nor headwind.",
+        },
+        "RSI": {
+         1:  "RSI oversold/bullish zone (<45). Good risk/reward to hold or add. Exit trigger: RSI > 70.",
+         -1: "RSI overbought/bearish zone (>55). Trim into strength. Re-enter when RSI < 50.",
+         0:  "RSI neutral (45–55). No RSI-based action required.",
+        },
+        "MACD": {
+         1:  "MACD above signal line — bullish momentum. Hold. Sell trigger: bearish crossover.",
+         -1: "MACD below signal line — bearish momentum. Tighten stop. Buy trigger: bullish crossover.",
+         0:  "MACD flat — no clear momentum signal.",
+        },
+        "Bollinger": {
+         1:  "Price near/below lower band — mean-reversion buy opportunity. Target: midband (+8–12 %).",
+         -1: "Price near/above upper band — overbought. Trim into strength, target midband.",
+         0:  "Price mid-band — neutral. Hold position.",
+        },
+        "Volume": {
+         1:  "Volume surge on up-day — institutional accumulation. Bullish confirmation; hold or add.",
+         -1: "Volume surge on down-day — distribution. Warning sign; tighten stops.",
+         0:  "Normal volume — no volume confirmation signal.",
+        },
+        "Reversal": {
+         1:  "Short-term oversold bounce setup — add small tactical position for 3–5 day trade.",
+         -1: "Short-term overbought — potential pullback in 3–5 days. Avoid adding now.",
+         0:  "No short-term reversal setup.",
+        },
+    }
+
+    rows = []
+    for sig_name, (vote, label) in sigs.items():
+        when  = WHEN.get(sig_name, {}).get(vote, "Monitor for changes.")
+        icon  = "▲" if vote > 0 else ("▼" if vote < 0 else "—")
+        color = "#27ae60" if vote > 0 else ("#e74c3c" if vote < 0 else "#777")
+        rows.append(html.Tr([
+            html.Td(f"{icon} {sig_name}", style={"fontWeight": "bold", "color": color,
+                                                   "whiteSpace": "nowrap", "width": "100px"}),
+            html.Td(label, style={"color": "#aaa", "fontSize": "11px", "width": "200px"}),
+            html.Td(when,  style={"color": "#ddd", "fontSize": "12px"}),
+        ]))
+
+    # ── Position-level context alerts ─────────────────────────────────────
+    alerts = []
+    if ret_pct >= 20:
+        alerts.append(dbc.Alert(
+            f"💰 Position up {ret_pct:+.1f}%. Consider locking in 30–50 % profits. "
+            "Trailing stop recommended at 10 % below current price.",
+            color="warning", className="py-2 mb-2"))
+    if ret_pct <= -10:
+        alerts.append(dbc.Alert(
+            f"⚠️ Position down {ret_pct:.1f}%. Re-evaluate original thesis. "
+            "Stop-loss at −15 % is the standard risk limit.",
+            color="danger", className="py-2 mb-2"))
+    if ret_pct <= -15:
+        alerts.append(dbc.Alert(
+            "🚨 Stop-loss threshold (−15 %) breached. Exit to preserve capital.",
+            color="danger", className="py-2 mb-2",
+            style={"fontWeight": "bold"}))
+
+    return html.Div([
+        html.H6("Trade Advisory", style={"color": "#4fc3f7", "marginTop": "18px"}),
+        # Main recommendation
+        dbc.Card(dbc.CardBody([
+            html.H4(action, style={"color": ac, "fontWeight": "bold", "marginBottom": "6px"}),
+            html.P(rationale, style={"color": "#ccc", "fontSize": "13px", "marginBottom": "0"}),
+        ]), style={"background": CARD, "border": f"2px solid {ac}",
+                   "borderRadius": "8px", "marginBottom": "12px"}),
+        # Stop / target quick reference
+        dbc.Row([
+            dbc.Col(dbc.Card(dbc.CardBody([
+                html.P("Stop-Loss Rule", className="mb-1 text-muted", style={"fontSize": "11px"}),
+                html.P("Exit if price drops −15 % from avg cost OR score ≤ −3",
+                       style={"fontSize": "12px", "color": "#e74c3c", "marginBottom": "0"}),
+            ]), style={"background": "#2c1a1a", "border": "1px solid #553333",
+                       "borderRadius": "6px"}), md=6),
+            dbc.Col(dbc.Card(dbc.CardBody([
+                html.P("Scale-In Rule", className="mb-1 text-muted", style={"fontSize": "11px"}),
+                html.P("Add when score ≥ +3 AND price is within 5 % of SMA50",
+                       style={"fontSize": "12px", "color": "#27ae60", "marginBottom": "0"}),
+            ]), style={"background": "#1a2c1a", "border": "1px solid #335533",
+                       "borderRadius": "6px"}), md=6),
+        ], className="mb-3"),
+        # Position alerts
+        html.Div(alerts) if alerts else html.Div(),
+        # Per-signal breakdown
+        html.H6("Signal Criteria & Action Triggers",
+                style={"color": "#aaa", "fontSize": "12px", "marginBottom": "6px"}),
+        dbc.Table(
+            [html.Thead(html.Tr([html.Th("Signal"), html.Th("Reading"), html.Th("What to do")])),
+             html.Tbody(rows)],
+            bordered=False, size="sm", style={"color": "white", "fontSize": "12px"},
+            className="mb-0",
+        ) if rows else html.P("No signal data.", style={"color": "#555"}),
+    ])
 
 
 def build_closed_pnl(closed: list[dict]) -> go.Figure:
@@ -582,8 +753,9 @@ def create_app(debug: bool = False) -> dash.Dash:
                 dbc.Row([
                     dbc.Col([
                         dbc.Label("Symbol"),
-                        dbc.Input(id="inp-symbol", placeholder="e.g. AAPL", type="text",
+                        dbc.Input(id="inp-symbol", placeholder="e.g. AAPL, SREN.SW, BTC-USD", type="text",
                                   style={"textTransform": "uppercase"}),
+                        dbc.FormText("Use yfinance ticker: US stocks = AAPL, Swiss = SREN.SW, crypto = BTC-USD", color="muted"),
                     ], md=4),
                     dbc.Col([
                         dbc.Label("Side"),
@@ -638,6 +810,52 @@ def create_app(debug: bool = False) -> dash.Dash:
         ], id="modal-delete", is_open=False),
         dcc.Store(id="store-delete-id"),
 
+        # ── Edit Trade Modal ──────────────────────
+        dbc.Modal([
+            dbc.ModalHeader(dbc.ModalTitle("✏️ Edit Trade")),
+            dbc.ModalBody([
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Label("Symbol"),
+                        dbc.Input(id="edit-symbol", type="text",
+                                  style={"textTransform": "uppercase"}),
+                        dbc.FormText("e.g. AAPL, SREN.SW, BTC-USD", color="muted"),
+                    ], md=4),
+                    dbc.Col([
+                        dbc.Label("Side"),
+                        dbc.Select(id="edit-side", options=[
+                            {"label": "BUY  🟢", "value": "BUY"},
+                            {"label": "SELL 🔴", "value": "SELL"},
+                        ]),
+                    ], md=4),
+                    dbc.Col([
+                        dbc.Label("Date"),
+                        dbc.Input(id="edit-date", type="date"),
+                    ], md=4),
+                ], className="mb-3"),
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Label("Entry Price"),
+                        dbc.Input(id="edit-price", type="number", min=0),
+                    ], md=6),
+                    dbc.Col([
+                        dbc.Label("Quantity"),
+                        dbc.Input(id="edit-qty", type="number", min=0.001),
+                    ], md=6),
+                ], className="mb-3"),
+                dbc.Row([dbc.Col([
+                    dbc.Label("Notes (optional)"),
+                    dbc.Input(id="edit-notes", type="text"),
+                ])]),
+                html.Div(id="edit-feedback", className="mt-2"),
+            ]),
+            dbc.ModalFooter([
+                dbc.Button("Cancel", id="btn-edit-cancel", color="secondary", className="me-2"),
+                dbc.Button("Save Changes", id="btn-edit-submit", color="primary"),
+            ]),
+        ], id="modal-edit", is_open=False, size="lg"),
+        dcc.Store(id="store-edit-id"),
+
         # ── Main content ─────────────────────────
         dbc.Container([
             html.Div(id="summary-section", className="mt-3"),
@@ -669,6 +887,7 @@ def create_app(debug: bool = False) -> dash.Dash:
                         dbc.Col(dcc.Graph(id="graph-position-signals"), md=4),
                     ]),
                     html.Div(id="detail-signal-table"),
+                    html.Div(id="detail-advisory"),
                 ]),
 
                 # Performance tab
@@ -700,6 +919,33 @@ def create_app(debug: bool = False) -> dash.Dash:
                     ]),
                 ]),
 
+                # Costs tab
+                dbc.Tab(label="💸 Transaction Costs", tab_id="tab-costs", children=[
+                    html.Div(className="mt-3", children=[
+                        dbc.Alert([
+                            html.B("Broker: YUH (PostFinance × Swissquote)  "),
+                            html.Span("Stocks/ETFs 0.50% · Crypto 1.00% · FX spread 0.95% · Custody free",
+                                      style={"fontSize": "13px", "color": "#ccc"}),
+                        ], color="dark", className="mb-3",
+                        style={"border": "1px solid #4fc3f7"}),
+                        html.Div(id="costs-summary-cards", className="mb-3"),
+                        dbc.Row([
+                            dbc.Col([
+                                html.H6("Break-Even Analysis", style={"color": "#4fc3f7"}),
+                                html.Small("How much price must rise to cover round-trip costs",
+                                           style={"color": "#888"}),
+                                html.Div(id="costs-breakeven-table", className="mt-2"),
+                            ], md=6),
+                            dbc.Col([
+                                html.H6("Per-Trade Cost Detail", style={"color": "#4fc3f7"}),
+                                html.Small("Trading fee + FX spread per logged trade",
+                                           style={"color": "#888"}),
+                                html.Div(id="costs-trade-detail", className="mt-2"),
+                            ], md=6),
+                        ]),
+                    ]),
+                ]),
+
             ], id="main-tabs", active_tab="tab-portfolio"),
         ], fluid=True, style={"maxWidth": "1600px"}),
 
@@ -715,10 +961,11 @@ def create_app(debug: bool = False) -> dash.Dash:
     def init_trades(_):
         return load_trades()
 
-    # Open/close modal
+    # Open/close modal + save trade
     @app.callback(
         Output("modal-trade", "is_open"),
         Output("modal-feedback", "children"),
+        Output("store-trades", "data", allow_duplicate=True),
         Input("btn-open-modal", "n_clicks"),
         Input("btn-modal-cancel", "n_clicks"),
         Input("btn-modal-submit", "n_clicks"),
@@ -735,10 +982,11 @@ def create_app(debug: bool = False) -> dash.Dash:
     def toggle_modal(open_clicks, cancel_clicks, submit_clicks,
                      is_open, symbol, side, trade_date, price, qty, notes, trades):
         triggered = ctx.triggered_id
+        no_store = dash.no_update
         if triggered == "btn-open-modal":
-            return True, ""
+            return True, "", no_store
         if triggered == "btn-modal-cancel":
-            return False, ""
+            return False, "", no_store
         if triggered == "btn-modal-submit":
             # Validate
             errors = []
@@ -748,41 +996,33 @@ def create_app(debug: bool = False) -> dash.Dash:
             if float(price or 0) <= 0: errors.append("Price must be > 0.")
             if float(qty   or 0) <= 0: errors.append("Quantity must be > 0.")
             if errors:
-                return True, dbc.Alert(" ".join(errors), color="danger", className="mb-0")
-            # Save
+                return True, dbc.Alert(" ".join(errors), color="danger", className="mb-0"), no_store
+            # Build and save trade
+            trades = trades or []
             trade = {
-                "id":       next_id(trades or []),
-                "symbol":   symbol.strip().upper(),
-                "side":     side,
-                "date":     trade_date,
-                "price":    float(price),
-                "quantity": float(qty),
-                "notes":    notes or "",
+                "id":        next_id(trades),
+                "symbol":    symbol.strip().upper(),
+                "side":      side,
+                "date":      trade_date,
+                "price":     float(price),
+                "quantity":  float(qty),
+                "notes":     notes or "",
                 "logged_at": datetime.now().isoformat(),
             }
-            trades = (trades or []) + [trade]
-            save_trades(trades)
-            # Clear price cache so next refresh gets live price
+            updated = trades + [trade]
+            save_trades(updated)
+            # Clear price cache so live price is fetched fresh
             _price_cache.pop(trade["symbol"], None)
             _history_cache.pop(trade["symbol"], None)
-            return False, ""
-        return is_open, ""
-
-    # Re-read trades from disk whenever modal closes (to pick up saved trade)
-    @app.callback(
-        Output("store-trades", "data", allow_duplicate=True),
-        Input("modal-trade", "is_open"),
-        prevent_initial_call=True,
-    )
-    def reload_on_close(is_open):
-        if not is_open:
-            return load_trades()
-        return dash.no_update
+            # Return updated list directly → triggers render_all immediately
+            return False, "", updated
+        return is_open, "", no_store
 
     # Delete modal
     @app.callback(
         Output("modal-delete", "is_open"),
         Output("store-delete-id", "data"),
+        Output("store-trades", "data", allow_duplicate=True),
         Input({"type": "btn-delete", "index": ALL}, "n_clicks"),
         Input("btn-del-cancel", "n_clicks"),
         Input("btn-del-confirm", "n_clicks"),
@@ -792,26 +1032,90 @@ def create_app(debug: bool = False) -> dash.Dash:
     )
     def handle_delete(del_clicks, cancel, confirm, del_id, trades):
         triggered = ctx.triggered_id
+        no_store = dash.no_update
         if isinstance(triggered, dict) and triggered.get("type") == "btn-delete":
             idx = triggered["index"]
-            return True, idx
+            return True, idx, no_store
         if triggered == "btn-del-cancel":
-            return False, None
+            return False, None, no_store
         if triggered == "btn-del-confirm" and del_id is not None:
             updated = [t for t in (trades or []) if t.get("id") != del_id]
             save_trades(updated)
-            return False, None
-        return False, None
+            return False, None, updated
+        return False, None, no_store
 
+    # Edit modal — open with pre-filled values OR save changes
     @app.callback(
-        Output("store-trades", "data", allow_duplicate=True),
-        Input("modal-delete", "is_open"),
+        Output("modal-edit",    "is_open"),
+        Output("edit-symbol",   "value"),
+        Output("edit-side",     "value"),
+        Output("edit-date",     "value"),
+        Output("edit-price",    "value"),
+        Output("edit-qty",      "value"),
+        Output("edit-notes",    "value"),
+        Output("edit-feedback", "children"),
+        Output("store-edit-id", "data"),
+        Output("store-trades",  "data", allow_duplicate=True),
+        Input({"type": "btn-edit", "index": ALL}, "n_clicks"),
+        Input("btn-edit-cancel",  "n_clicks"),
+        Input("btn-edit-submit",  "n_clicks"),
+        State("store-edit-id",    "data"),
+        State("edit-symbol",      "value"),
+        State("edit-side",        "value"),
+        State("edit-date",        "value"),
+        State("edit-price",       "value"),
+        State("edit-qty",         "value"),
+        State("edit-notes",       "value"),
+        State("store-trades",     "data"),
         prevent_initial_call=True,
     )
-    def reload_after_delete(is_open):
-        if not is_open:
-            return load_trades()
-        return dash.no_update
+    def handle_edit(edit_clicks, cancel, submit, edit_id,
+                    symbol, side, trade_date, price, qty, notes, trades):
+        triggered = ctx.triggered_id
+        no_u = dash.no_update
+        trades = trades or []
+
+        # Open edit modal pre-filled
+        if isinstance(triggered, dict) and triggered.get("type") == "btn-edit":
+            tid = triggered["index"]
+            t   = next((x for x in trades if x.get("id") == tid), None)
+            if not t:
+                return False, no_u, no_u, no_u, no_u, no_u, no_u, "", None, no_u
+            return (True, t["symbol"], t["side"], t.get("date", ""),
+                    t["price"], t["quantity"], t.get("notes", ""), "", tid, no_u)
+
+        if triggered == "btn-edit-cancel":
+            return False, no_u, no_u, no_u, no_u, no_u, no_u, "", None, no_u
+
+        if triggered == "btn-edit-submit":
+            errors = []
+            if not symbol: errors.append("Symbol required.")
+            if not price:  errors.append("Price required.")
+            if not qty:    errors.append("Quantity required.")
+            if float(price or 0) <= 0: errors.append("Price must be > 0.")
+            if float(qty   or 0) <= 0: errors.append("Quantity must be > 0.")
+            if errors:
+                return (True, no_u, no_u, no_u, no_u, no_u, no_u,
+                        dbc.Alert(" ".join(errors), color="danger", className="mb-0"),
+                        edit_id, no_u)
+            updated = []
+            for t in trades:
+                if t.get("id") == edit_id:
+                    t = dict(t,
+                             symbol=symbol.strip().upper(),
+                             side=side,
+                             date=trade_date,
+                             price=float(price),
+                             quantity=float(qty),
+                             notes=notes or "")
+                    # Invalidate cache for old and new symbol
+                    _price_cache.pop(t["symbol"], None)
+                    _history_cache.pop(t["symbol"], None)
+                updated.append(t)
+            save_trades(updated)
+            return False, no_u, no_u, no_u, no_u, no_u, no_u, "", None, updated
+
+        return False, no_u, no_u, no_u, no_u, no_u, no_u, "", None, no_u
 
     # Master render callback
     @app.callback(
@@ -836,11 +1140,13 @@ def create_app(debug: bool = False) -> dash.Dash:
         pnl_fig   = build_pnl_chart(pf)
         alloc_fig = build_allocation_pie(pf)
 
-        # Open positions table
+        # Open positions table (with full company name)
         open_rows = list(pf["open"].values())
         if open_rows:
+            for row in open_rows:
+                row["name"] = get_asset_name(row["symbol"])
             df_open = pd.DataFrame(open_rows)[
-                ["symbol","quantity","avg_cost","current_price",
+                ["symbol","name","quantity","avg_cost","current_price",
                  "unrealized_pnl","return_pct","invested","hold_days"]
             ].rename(columns={"avg_cost":"avg cost","current_price":"price now",
                                "unrealized_pnl":"unreal P&L","return_pct":"ret %",
@@ -865,8 +1171,11 @@ def create_app(debug: bool = False) -> dash.Dash:
             pos_table = dbc.Alert("No open positions. Log a BUY trade to get started.",
                                    color="secondary")
 
-        # Dropdown options
-        dd_opts = [{"label": sym, "value": sym} for sym in pf["open"]]
+        # Dropdown options — show "SYMBOL — Company Name"
+        dd_opts = [
+            {"label": f"{sym} — {get_asset_name(sym)}", "value": sym}
+            for sym in pf["open"]
+        ]
 
         # Closed P&L chart
         closed_fig = build_closed_pnl(pf["closed"])
@@ -911,31 +1220,38 @@ def create_app(debug: bool = False) -> dash.Dash:
         else:
             closed_table = dbc.Alert("No closed trades yet.", color="secondary")
 
-        # Trade log with delete buttons
+        # Trade log with edit + delete buttons and company name
         if trades:
             rows = []
-            for t in sorted(trades, key=lambda x: x["date"], reverse=True):
+            for t in sorted(trades, key=lambda x: x.get("date", ""), reverse=True):
                 side_badge = dbc.Badge(
                     t["side"], color="success" if t["side"] == "BUY" else "danger",
                     className="me-1"
                 )
                 total = round(t["price"] * t["quantity"], 2)
+                name  = get_asset_name(t["symbol"])
+                tid   = t.get("id")
                 rows.append(html.Tr([
-                    html.Td(t.get("id", "")),
-                    html.Td(html.B(t["symbol"])),
+                    html.Td(tid, style={"color": "#666", "fontSize": "11px"}),
+                    html.Td([html.B(t["symbol"]),
+                             html.Span(f" {name}", style={"color": "#888", "fontSize": "11px"})]),
                     html.Td(side_badge),
                     html.Td(t["date"]),
                     html.Td(f"${t['price']:.4f}"),
                     html.Td(t["quantity"]),
                     html.Td(f"${total:,.2f}"),
                     html.Td(t.get("notes", ""), style={"color": "#aaa", "fontSize": "11px"}),
-                    html.Td(dbc.Button("🗑", id={"type": "btn-delete", "index": t.get("id")},
-                                       color="danger", size="sm", outline=True)),
+                    html.Td([
+                        dbc.Button("✏️", id={"type": "btn-edit", "index": tid},
+                                   color="info", size="sm", outline=True, className="me-1"),
+                        dbc.Button("🗑", id={"type": "btn-delete", "index": tid},
+                                   color="danger", size="sm", outline=True),
+                    ]),
                 ]))
             log_table = dbc.Table(
                 [html.Thead(html.Tr([
-                    html.Th("#"), html.Th("Symbol"), html.Th("Side"), html.Th("Date"),
-                    html.Th("Price"), html.Th("Qty"), html.Th("Total"), html.Th("Notes"), html.Th("")
+                    html.Th("#"), html.Th("Symbol / Name"), html.Th("Side"), html.Th("Date"),
+                    html.Th("Price"), html.Th("Qty"), html.Th("Total"), html.Th("Notes"), html.Th("Actions")
                 ])),
                  html.Tbody(rows)],
                 bordered=False, hover=True, responsive=True, size="sm",
@@ -948,26 +1264,134 @@ def create_app(debug: bool = False) -> dash.Dash:
         return (summary, pnl_fig, alloc_fig, pos_table,
                 dd_opts, closed_fig, perf_cards, closed_table, log_table)
 
+    # Transaction costs callback
+    @app.callback(
+        Output("costs-summary-cards",    "children"),
+        Output("costs-breakeven-table",  "children"),
+        Output("costs-trade-detail",     "children"),
+        Input("store-trades",            "data"),
+    )
+    def render_costs(trades):
+        from transaction import YUH, portfolio_cost_summary, breakeven_table, annotate_trades
+        trades = trades or []
+        if not trades:
+            empty = dbc.Alert("No trades yet. Log a trade to see cost analysis.",
+                              color="secondary")
+            return empty, empty, empty
+
+        # ── Summary cards ────────────────────────────────────────────────
+        summary = portfolio_cost_summary(trades, YUH)
+        cards = dbc.Row([
+            dbc.Col(card_metric("Total Fees Paid",
+                                f"CHF {summary['total_costs_chf']:,.2f}",
+                                f"{summary['n_trades']} trades",
+                                "#e74c3c"), md=3),
+            dbc.Col(card_metric("Trading Fees",
+                                f"CHF {summary['total_trading_fees_chf']:,.2f}",
+                                "0.50% stocks · 1.00% crypto",
+                                "#e67e22"), md=3),
+            dbc.Col(card_metric("FX Conversion Fees",
+                                f"CHF {summary['total_fx_fees_chf']:,.2f}",
+                                "0.95% on non-CHF trades",
+                                "#f39c12"), md=3),
+            dbc.Col(card_metric("Avg Cost / Trade",
+                                f"CHF {summary['avg_cost_per_trade_chf']:,.2f}",
+                                "per single leg",
+                                "#95a5a6"), md=3),
+        ], className="g-2")
+
+        # ── Break-even table ─────────────────────────────────────────────
+        pf  = compute_portfolio(trades)
+        be_rows = breakeven_table(pf["open"], YUH)
+        if be_rows:
+            be_table = dbc.Table([
+                html.Thead(html.Tr([
+                    html.Th("Symbol"), html.Th("Avg Cost"), html.Th("Current"),
+                    html.Th("Break-Even"), html.Th("Need +%"),
+                    html.Th("Gap to BE"), html.Th("Round-Trip Cost"),
+                ])),
+                html.Tbody([html.Tr([
+                    html.Td(html.B(r["symbol"])),
+                    html.Td(f"{r['currency']} {r['avg_cost']:.4f}"),
+                    html.Td(f"{r['currency']} {r['current_price']:.4f}"),
+                    html.Td(f"{r['currency']} {r['breakeven_price']:.4f}",
+                            style={"color": "#f39c12"}),
+                    html.Td(f"+{r['breakeven_pct']:.2f}%",
+                            style={"color": "#f39c12"}),
+                    html.Td(f"{r['gap_to_breakeven']:+.2f}%",
+                            style={"color": "#27ae60" if r["gap_to_breakeven"] >= 0
+                                   else "#e74c3c"}),
+                    html.Td(f"CHF {r['roundtrip_cost']:.2f}",
+                            style={"color": "#e74c3c"}),
+                ]) for r in be_rows]),
+            ], bordered=False, hover=True, size="sm",
+               style={"color": "white", "fontSize": "12px"})
+        else:
+            be_table = dbc.Alert("No open positions.", color="secondary")
+
+        # ── Per-trade cost detail ─────────────────────────────────────────
+        annotated = annotate_trades(trades, YUH)
+        detail_rows = []
+        for t in sorted(annotated, key=lambda x: x.get("date",""), reverse=True):
+            c = t.get("_cost", {})
+            if "error" in c:
+                continue
+            side_color = "#27ae60" if t["side"] == "BUY" else "#e74c3c"
+            detail_rows.append(html.Tr([
+                html.Td(t.get("date",""), style={"color": "#888", "fontSize": "11px"}),
+                html.Td(html.B(t["symbol"])),
+                html.Td(t["side"], style={"color": side_color, "fontWeight": "bold"}),
+                html.Td(f"{c.get('currency','?')} {t['price']:.4f}"),
+                html.Td(f"× {t['quantity']}"),
+                html.Td(f"CHF {c.get('gross_value_chf', 0):,.2f}"),
+                html.Td(f"CHF {c.get('trading_fee_chf', 0):.2f}",
+                        style={"color": "#e67e22"}),
+                html.Td(f"CHF {c.get('fx_fee_chf', 0):.2f}",
+                        style={"color": "#f39c12"}),
+                html.Td(f"CHF {c.get('total_cost_chf', 0):.2f}",
+                        style={"color": "#e74c3c", "fontWeight": "bold"}),
+                html.Td(f"{c.get('effective_fee_pct', 0):.2f}%",
+                        style={"color": "#95a5a6"}),
+            ]))
+        if detail_rows:
+            detail_table = dbc.Table([
+                html.Thead(html.Tr([
+                    html.Th("Date"), html.Th("Symbol"), html.Th("Side"),
+                    html.Th("Price"), html.Th("Qty"), html.Th("Gross (CHF)"),
+                    html.Th("Trade Fee"), html.Th("FX Fee"),
+                    html.Th("Total Cost"), html.Th("Eff %"),
+                ])),
+                html.Tbody(detail_rows),
+            ], bordered=False, hover=True, size="sm",
+               style={"color": "white", "fontSize": "12px"})
+        else:
+            detail_table = dbc.Alert("No cost data available.", color="secondary")
+
+        return cards, be_table, detail_table
+
     # Position detail callback
     @app.callback(
         Output("graph-position-price",   "figure"),
         Output("graph-position-signals", "figure"),
         Output("detail-badges",          "children"),
         Output("detail-signal-table",    "children"),
+        Output("detail-advisory",        "children"),
         Input("dd-position",             "value"),
         State("store-trades",            "data"),
     )
     def update_detail(symbol, trades):
+        empty = (go.Figure(), go.Figure(), [], html.Div(), html.Div())
         if not symbol:
-            return go.Figure(), go.Figure(), [], html.Div()
+            return empty
 
         pf  = compute_portfolio(trades or [])
         pos = pf["open"].get(symbol)
         if not pos:
-            return go.Figure(), go.Figure(), [], html.Div()
+            return empty
 
-        df   = get_history(symbol, days=365)
-        sigs = run_signals(df)
+        full_name = get_asset_name(symbol)
+        df        = get_history(symbol, days=365)
+        sigs      = run_signals(df)
         sig_label, sig_color = signal_summary(sigs)
 
         price_fig  = build_price_with_entry(
@@ -975,32 +1399,36 @@ def create_app(debug: bool = False) -> dash.Dash:
         )
         signal_fig = build_signal_bars(sigs, symbol)
 
-        # Badges
+        # Header badges — include full company name
         ret_c = "#27ae60" if pos["return_pct"] >= 0 else "#e74c3c"
-        badges = [
-            dbc.Badge(sig_label,  color="success" if "BUY" in sig_label else
-                     ("danger" if "SELL" in sig_label else "secondary"),
-                     className="me-2 fs-6"),
+        badges = html.Div([
+            html.H5(f"{symbol} — {full_name}",
+                    style={"color": "#4fc3f7", "marginBottom": "8px"}),
+            dbc.Badge(sig_label,
+                      color="success" if "BUY" in sig_label else
+                            ("danger" if "SELL" in sig_label else "secondary"),
+                      className="me-2 fs-6"),
             dbc.Badge(f"Return: {pos['return_pct']:+.2f}%", className="me-2 fs-6",
-                     style={"backgroundColor": ret_c}),
+                      style={"backgroundColor": ret_c}),
             dbc.Badge(f"P&L: ${pos['unrealized_pnl']:+.2f}", className="me-2 fs-6",
-                     style={"backgroundColor": ret_c}),
+                      style={"backgroundColor": ret_c}),
             dbc.Badge(f"{pos['hold_days']} days held", color="info", className="me-2 fs-6"),
-        ]
+            dbc.Badge(f"Avg cost: ${pos['avg_cost']:.4f}", color="secondary", className="me-2 fs-6"),
+        ])
 
         # Signal detail table
         if sigs:
-            rows = []
-            for name, (vote, label) in sigs.items():
+            sig_rows = []
+            for sname, (vote, label) in sigs.items():
                 icon  = "▲ BUY" if vote > 0 else ("▼ SELL" if vote < 0 else "— Neutral")
                 color = "#27ae60" if vote > 0 else ("#e74c3c" if vote < 0 else "#777")
-                rows.append(html.Tr([
-                    html.Td(name, style={"fontWeight": "bold"}),
+                sig_rows.append(html.Tr([
+                    html.Td(sname, style={"fontWeight": "bold"}),
                     html.Td(icon, style={"color": color}),
                     html.Td(label, style={"color": "#ccc", "fontSize": "12px"}),
                 ]))
             total_score = sum(v for v, _ in sigs.values())
-            rows.append(html.Tr([
+            sig_rows.append(html.Tr([
                 html.Td(html.B("Total Score"), style={"borderTop": "1px solid #555"}),
                 html.Td(html.B(f"{total_score:+d} / {len(sigs)}"),
                         style={"color": sig_color, "borderTop": "1px solid #555",
@@ -1010,13 +1438,15 @@ def create_app(debug: bool = False) -> dash.Dash:
             ]))
             sig_table = dbc.Table(
                 [html.Thead(html.Tr([html.Th("Signal"), html.Th("Vote"), html.Th("Reason")])),
-                 html.Tbody(rows)],
+                 html.Tbody(sig_rows)],
                 bordered=False, size="sm", style={"color": "white"}, className="mt-2",
             )
         else:
-            sig_table = dbc.Alert("Insufficient data for signals.", color="secondary")
+            sig_table = dbc.Alert("Insufficient price history for signals (need 22+ trading days).",
+                                   color="secondary")
 
-        return price_fig, signal_fig, badges, sig_table
+        advisory = build_advisory(pos, sigs)
+        return price_fig, signal_fig, badges, sig_table, advisory
 
     return app
 
@@ -1027,9 +1457,11 @@ def create_app(debug: bool = False) -> dash.Dash:
 
 def main():
     parser = argparse.ArgumentParser(description="Manual trading journal + exercise dashboard")
-    parser.add_argument("--port",  type=int, default=8051, help="Port (default 8051)")
-    parser.add_argument("--debug", action="store_true")
-    parser.add_argument("--reset", action="store_true", help="Clear all trades")
+    parser.add_argument("--port",     type=int, default=8051, help="Port (default 8051)")
+    parser.add_argument("--debug",    action="store_true")
+    parser.add_argument("--reset",    action="store_true", help="Clear all trades")
+    parser.add_argument("--password", type=str, default=None,
+                        help="Login password (or set DASHBOARD_PASSWORD env var)")
     args = parser.parse_args()
 
     if args.reset:
@@ -1038,6 +1470,9 @@ def main():
             print("  trades.json cleared.")
 
     app = create_app(debug=args.debug)
+
+    from auth import add_auth
+    add_auth(app, password=args.password, title="Trading Journal")
 
     trades = load_trades()
     print(f"\n{'═'*55}")
